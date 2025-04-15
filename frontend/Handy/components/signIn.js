@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import { SignUp } from "./SignUp";
 import { useNavigation } from "@react-navigation/native";
 
 export default function SignIn() {
@@ -8,6 +9,18 @@ export default function SignIn() {
 
   const navigation = useNavigation();
 
+
+  const loginCheck = () => {
+    // checkUsersApi(username, password)
+    // .then(()=>{
+      navigation.navigate("CustomerHomepage")
+    // })
+      // .catch(()=>{
+      //display some text to say that password was incorrect
+      // })
+  }
+
+  
   return (
     <View>
       <TextInput
@@ -21,15 +34,21 @@ export default function SignIn() {
         onChangeText={(newText) => changePassword(newText)}
       />
 
-      <Button title="Login" />
+      <Button 
+      title="Login" 
+      onPress={() => loginCheck()}
+      ></Button>
+    
+
 
       <Button
         title="Sign-up"
         onPress={() => navigation.navigate("SignUp")}
       ></Button>
+
     </View>
   );
-}
+};
 
 // const styles = StyleSheet.create({
 //     container: {
@@ -39,3 +58,4 @@ export default function SignIn() {
 //       justifyContent: 'center',
 //     },
 //   });
+
