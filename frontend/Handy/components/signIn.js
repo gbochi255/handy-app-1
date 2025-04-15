@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
-import { SignUp } from "./SignUp";
 import { useNavigation } from "@react-navigation/native";
 
-const SignIn = () => {
+export default function SignIn() {
   const [username, changeUserName] = useState("");
   const [password, changePassword] = useState("");
 
@@ -30,7 +29,7 @@ const SignIn = () => {
       ></Button>
     </View>
   );
-};
+}
 
 // const styles = StyleSheet.create({
 //     container: {
@@ -40,5 +39,3 @@ const SignIn = () => {
 //       justifyContent: 'center',
 //     },
 //   });
-
-export { SignIn };

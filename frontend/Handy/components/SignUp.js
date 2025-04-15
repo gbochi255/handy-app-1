@@ -1,5 +1,8 @@
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
+import { Linking } from "react-native";
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -9,6 +12,10 @@ export default function SignUp() {
   const [postcode, setPostcode] = useState("");
   const [address, setAddress] = useState("");
   const [bio, setBio] = useState("");
+
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { photoUrl } = route.params || {};
 
   function handleSubmit() {}
 
@@ -50,7 +57,12 @@ export default function SignUp() {
         value={address}
         onChangeText={setAddress}
       ></TextInput>
-      <Button title="Launch Camera"></Button>
+
+      <Button
+        title="Launch Camera"
+        onPress={() => navigation.navigate("CameraApp")}
+      ></Button>
+
       <TextInput
         placeholder="describe yourself"
         multiline={true}
@@ -59,6 +71,19 @@ export default function SignUp() {
         onChangeText={setBio}
       />
       <Button title="Submit" onPress={handleSubmit}></Button>
+
+      {photoUrl && (
+        <Text
+          style={{
+            color: "blue",
+            textDecorationLine: "underline",
+            marginTop: 10,
+          }}
+          onPress={() => Linking.openURL(photoUrl)}
+        >
+          View Uploaded Photo
+        </Text>
+      )}
       <Button title="provider"></Button>
     </View>
   );
