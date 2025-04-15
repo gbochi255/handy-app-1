@@ -137,6 +137,4 @@ dist
 
 node_modules/
 *.env
-/backend/.env
-/frontend/.env
 /frontend/metro.config.cache
