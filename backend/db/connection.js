@@ -1,7 +1,9 @@
 const { Pool } = require("pg");
 const ENV = process.env.NODE_ENV || "development";
-const path = `${__dirname}/.env.${ENV}`;
-const db = new Pool();
+console.log("ENV is :", ENV);
+const path = `${__dirname}/../.env.${ENV}`;
+const config = {};
+const db = new Pool(config);
 
 require("dotenv").config({ path });
 
@@ -13,5 +15,4 @@ if (!process.env.PGDATABASE) {
   console.log("connected to", process.env.PGDATABASE);
 }
 
-module.exports = db;
-module.exports = PORT;
+module.exports = new Pool();
