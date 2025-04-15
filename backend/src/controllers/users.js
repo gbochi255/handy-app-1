@@ -6,7 +6,7 @@ exports.registerUser = (request, response, next) => {
   console.log("registerUser:", user);
   postUser(user)
     .then((newUser) => {
-      response.status(201).send({ newUser: newUser });
+      response.status(201).send( newUser );
     })
     .catch((error) => {
       console.log(error);

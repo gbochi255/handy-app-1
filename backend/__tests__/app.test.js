@@ -28,9 +28,9 @@ describe("POST /register", () => {
         about_me: "I am a new user of the brilliant Handy app.",
       })
       .expect(201)
-      .then(({ body }) => {
-        const user = body;
-        expect(user.user_id).toHaveProperty("user_id");
+      .then(({ body: user }) => {
+        console.log(user)
+        expect(user).toHaveProperty("user_id");
         expect(user.firstname).toBe("Ian");
         expect(user.lastname).toBe("Smith");
         expect(user.email).toBe("ian.smith@gmail.com");
