@@ -41,6 +41,18 @@ export default function SignIn() {
       >
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.logo}
+        onPress={() => navigation.navigate("CustomerHomepage")}
+      >
+        <Image source={require("../assets/backdoor.png")} style={styles.logo} />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        source={require("../assets/backdoor.png")}
+        style={styles.logo}
+      />
     </View>
   );
 }
