@@ -1,17 +1,20 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 
-
+// { route: { params }, jobDetes }
 
 export default function BidPage({ route: { params } }) {
-  console.log(params, '<---params in JobPage')
+
+const bidInfo = params[0]
+const jobInfo = params[1]
+  
   return (
     <View>
       <View style={styles.bidMetaData}>
         <Image></Image>
         <View style={styles.bidInfo}>
-          <Text>Job:{params.bid_title}</Text>
-          <Text>Image:{params.image_title}</Text>
-          <Text>Bid Date: {params.posted_date}</Text>
+          <Text>Job: {jobInfo.job_title}</Text>
+          <Text>Image: {jobInfo.image_title}</Text>
+          <Text>Bid Date: {bidInfo.created_at}</Text>
         </View>
       </View>
       <View>
