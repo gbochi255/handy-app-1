@@ -32,7 +32,7 @@ exports.postUser = ({
     .then(({ rows }) => {
     console.log("Rows returned:", rows);
     return rows[0];
-  }).catch((err) =>{
-    throw err
+  }).catch((error) =>{
+    return error
   })
 };

@@ -1,11 +1,13 @@
-const { Pool } = require("pg");
 const ENV = process.env.NODE_ENV || "development";
-console.log("ENV is :", ENV);
-const path = `${__dirname}/../.env.${ENV}`;
-const config = {};
-const db = new Pool(config);
+require('dotenv').config({ path: `${__dirname}/../.env.${ENV}` });
+const { Pool } = require("pg");
 
-require("dotenv").config({ path });
+// console.log("ENV is :", ENV);
+const config = {
+  
+};
+
+const db = new Pool(config);
 
 const PORT = process.env.PORT || 3000;
 

@@ -10,6 +10,6 @@ exports.registerUser = (request, response, next) => {
     })
     .catch((error) => {
       console.log(error);
-      throw error;
+      next(error)
     });
 };
