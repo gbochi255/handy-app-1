@@ -7,6 +7,11 @@ import SignUp from "./components/SignUp.js";
 import CustomerHomepage from "./components/CustomerHomepage.js";
 import CameraApp from "./components/CameraApp.js";
 import { UserProvider } from "./components/UserContext";
+import ProviderHomepage from "./components/ProviderHomepage.js";
+import JobItem from "./components/JobItem.js";
+import JobPage from "./components/JobPage.js";
+import PostJob from "./components/PostJob.js";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +24,10 @@ export default function App() {
           <Stack.Screen name="SignUp" component={SignUp} />
           <Stack.Screen name="CameraApp" component={CameraApp} />
           <Stack.Screen name="CustomerHomepage" component={CustomerHomepage} />
+          <Stack.Screen name="ProviderHomepage" component={ProviderHomepage} />
+          <Stack.Screen name="JobItem" component={JobItem} />
+          <Stack.Screen name="JobPage" component={JobPage} />
+          <Stack.Screen name="PostJob" component={PostJob} />
         </Stack.Navigator>
       </NavigationContainer>
     </UserProvider>
