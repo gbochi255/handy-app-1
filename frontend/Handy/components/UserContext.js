@@ -9,9 +9,13 @@ export const UserProvider = ({ children }) => {
     email: "",
     password: "",
     postcode: "",
-    address: "",
+    region: "",
+    long: "",
+    lat: "",
     bio: "",
     photoUrl: "",
+    isProvider: false,
+    token: false,
   });
 
   return (

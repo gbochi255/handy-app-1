@@ -9,29 +9,73 @@ import {
   Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useContext } from "react";
+import { UserContext } from "./UserContext";
 
 export default function SignIn() {
-  const [username, changeUserName] = useState("");
-  const [password, changePassword] = useState("");
-
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const { setUserData } = useContext(UserContext);
   const navigation = useNavigation();
+
+  function verifyUser() {
+    setUserData({
+      firstName: "John",
+      lastName: "Smith",
+      email: "john@smith.com",
+      password: "banana",
+      postcode: "E14 0GX",
+      region: "London",
+      long: "-0.007487",
+      lat: "51.516586",
+      bio: "Great with a hammer",
+      photoUrl: "./assets/defaultProfile.png",
+      isProvider: true,
+      token: true,
+    });
+
+    navigation.navigate("CustomerHomepage");
+
+    // axios
+    //   .post("url/login", {
+    //     username,
+    //     password,
+    //   })
+    //   .then((res) => {
+    //     setUserData({
+    //       ...userData,
+    //       token: res.data.user.token,
+    //     });
+    //     navigation.navigate("CustomerHomepage");
+    //   })
+    //   .catch((err) => {
+    //     Alert.alert("Login failed");
+    //   });
+  }
 
   return (
     <View style={styles.container}>
       <Image source={require("../assets/logo.jpg")} style={styles.logo} />
+
       <TextInput
         style={styles.input}
         placeholder="username"
         value={username}
-        onChangeText={(newText) => changeUserName(newText)}
+        onChangeText={setUsername}
       />
       <TextInput
         style={styles.input}
         placeholder="password"
         value={password}
-        onChangeText={(newText) => changePassword(newText)}
+        onChangeText={setPassword}
       />
-      <TouchableOpacity style={styles.orangeButton} onPress={() => {}}>
+
+      <TouchableOpacity
+        style={styles.orangeButton}
+        onPress={() => {
+          verifyUser();
+        }}
+      >
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
 
@@ -51,7 +95,7 @@ export default function SignIn() {
 
       <TouchableOpacity
         source={require("../assets/backdoor.png")}
-        style={styles.logo}
+        style={styles.backdoor}
       />
     </View>
   );
@@ -68,6 +112,11 @@ const styles = StyleSheet.create({
   logo: {
     width: 150,
     height: 150,
+    marginBottom: 10,
+  },
+  backdoor: {
+    width: 50,
+    height: 50,
     marginBottom: 10,
   },
   input: {
