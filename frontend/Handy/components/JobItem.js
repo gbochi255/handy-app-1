@@ -1,26 +1,62 @@
-import { StyleSheet, Text, View} from "react-native";
+import { StyleSheet, Text, View, TouchableHighlight } from "react-native";
+import { JobPage } from "./JobPage";
+import { useNavigation } from "@react-navigation/native";
 
 
-             
-      export default function JobItem ({job_title}) { (
-          <View style={styles.item}>
-            <Text style={styles.title}>{job_title}</Text>
-          </View>
-          )}
+// {
+//   image_title,
+//   job_title,
+//   posted_date,
+//   job_id,
+// }
 
+
+export default function JobItem(props) {
+
+  const navigation = useNavigation()
+  
+
+  return (
+    <View>
+
+      <TouchableHighlight onPress={() => navigation.navigate("JobPage", props)} underlayColor="white">
+        <View style={styles.item}>
+          <Text style={styles.image_title}>{props.image_title}</Text>
+         <Text style={styles.job_title}>{props.job_title}</Text>
+         <Text style={styles.posted_date}>{props.posted_date}</Text>
+        </View>
+      </TouchableHighlight>
+
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
-    item: {
+  item: {
+    alignitems: "center",
     paddingTop: 20,
     paddingHorizontal: 16, // left & right
     borderColor: "rgb(65, 129, 231)",
-    borderWidth: 10,
+    borderWidth: 3,
+    margin: 3,
+    flexDirection: "row",
   },
-  title: {
+  image_title: {
+    flex: 1,
     paddingTop: 20,
-    paddingHorizontal: 16, // left & right
-    borderColor: "rgb(65, 129, 231)",
-    borderWidth: 10,
+    borderWidth: 1,
+    margin: 5,
   },
-})
-
+  job_title: {
+    flex: 2,
+    paddingTop: 20,
+    borderWidth: 1,
+    margin: 5,
+  },
+  posted_date: {
+    flex: 1,
+    paddingTop: 20,
+    borderWidth: 1,
+    margin: 5,
+  },
+});

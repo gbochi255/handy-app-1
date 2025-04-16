@@ -24,6 +24,10 @@ function renderList ({item}) {
 
   return (
     <View style={styles.appContainer}>
+
+
+
+
       {/* navbar section */}
       <View style={styles.navbarButtonContainer}>
         <View style={styles.customerButton}>
@@ -42,6 +46,7 @@ function renderList ({item}) {
       <View>
         <Text style={{ fontSize: 40 }}>My Jobs</Text>
 
+
         <View style={styles.addJobButton}>
           <Button
             title="Add Job"
@@ -52,13 +57,20 @@ function renderList ({item}) {
 
           <View style={styles.container}>
       
-              <SafeAreaView>
+               <SafeAreaView>
                 <FlatList
                   data={testJobData}
-                  renderItem={(item)=>  <JobItem job_title={item.job_title} />}
+                  renderItem={({item})=>  <JobItem 
+                  image_title={item.image_title}
+                  job_title={item.job_title}
+                  posted_date={item.posted_date}
+                  job_id={item.job_id}
+                  
+                  
+                  />}
                   keyExtractor={item => item.job_id}
                 />
-              </SafeAreaView>
+               </SafeAreaView> 
   
           </View>
 

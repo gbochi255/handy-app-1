@@ -24,8 +24,10 @@ export default function ProviderHomepage() {
       </View>
 
       {/* main section */}
-      <View>
-      </View>
+  
+            <View >
+              <Text >Provider</Text>
+            </View>
 
     </View>
   );
