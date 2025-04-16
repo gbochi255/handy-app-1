@@ -1,5 +1,4 @@
 const db = require("../../db/connection");
-const { loginUser } = require("../controllers/userController");
 
 exports.postUser = ({
   email,

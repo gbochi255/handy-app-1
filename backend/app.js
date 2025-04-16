@@ -1,24 +1,26 @@
 const express = require("express");
 const app = express();
 const { loginUser, createUser } = require("./src/controllers/userController");
-const {
-  handle404,
-  handleDefaultErrors,
-  handleDBErrors,
-} = require("./src/controllers/errorHandler");
+const { validateRegistration, validateLogin, handleDefaultErrors, handleDBErrors } = require("./src/middleware");
 const baseurl = "";
 
 app.use(express.json());
 
-// routes go here
+// Routes with middleware
+app.post(`${baseurl}/register`, validateRegistration, createUser);
 
-app.post(`${baseurl}/register`, createUser);
+app.post(`${baseurl}/login`, validateLogin, loginUser);
 
-app.post(`${baseurl}/login`, loginUser);
+
+// handle invalid routes gracefully
+app.use((req, res, next) => {
+  const error = new Error('Not Found - The requested resource does not exist');
+  error.status = 404;
+  next(error); // Pass to error handlers
+});
 
 // Error handling middleware
 app.use(handleDBErrors); // Handle DB-specific errors first
 app.use(handleDefaultErrors); // Handle custom errors (400, 404, etc.)
-app.use(handle404); // Catch any unhandled 404s (e.g., invalid routes)
 
 module.exports = app;

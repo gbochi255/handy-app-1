@@ -44,7 +44,7 @@ describe("POST /register", () => {
         );
       });
   });
-  test("400: Invalid request data", () => {
+  test("400: Missing required fields", () => {
     return supertest(app)
       .post("/register")
       .send({
@@ -62,7 +62,7 @@ describe("POST /register", () => {
       .then((response) => {
         const { body } = response;
         expect(body.status).toBe(400);
-        expect(body.message).toBe("Bad request");
+        expect(body.message).toBe("Missing required fields");
       });
   });
 });
