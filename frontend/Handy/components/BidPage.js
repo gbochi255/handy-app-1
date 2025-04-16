@@ -1,51 +1,35 @@
-import { StyleSheet, Text, View, Image, FlatList } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 
-import testBidData from "../assets/testBidData";
-import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-import BidItem from "./BidItem"
-export default function JobPage({ route: { params } }) {
-  
+
+
+export default function BidPage({ route: { params } }) {
+  console.log(params, '<---params in JobPage')
   return (
     <View>
-      <View style={styles.jobMetaData}>
+      <View style={styles.bidMetaData}>
         <Image></Image>
-        <View style={styles.jobInfo}>
-          <Text>Job:{params.job_title}</Text>
+        <View style={styles.bidInfo}>
+          <Text>Job:{params.bid_title}</Text>
           <Text>Image:{params.image_title}</Text>
-          <Text>Posted_date:{params.posted_date}</Text>
+          <Text>Bid Date: {params.posted_date}</Text>
         </View>
       </View>
       <View>
         <Text>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corporis quasi expedita accusamus itaque recusandae dolor iusto earum, optio veniam! Hic est ipsam excepturi saepe! Vel voluptatem quod aut cumque recusandae?</Text>
       </View>
-      <View style={styles.container}>
-            
-                     <SafeAreaView>
-                      <FlatList
-                        data={testBidData}
-                        renderItem={({item})=>  <BidItem 
-                        bidItem={item}
-                      
-                        />}
-                        keyExtractor={item => item.job_id}
-                      />
-                     </SafeAreaView> 
-                
-                </View>
-      
     </View>
   )
 }
 
 
 const styles = StyleSheet.create({
-  jobMetaData: {
+  bidMetaData: {
     flexDirection: "row",
     borderBlockColor: "#rgb(65, 129, 231)",
     borderWidth: 1,
     padding: 5
   },
-  jobInfo: {
+  bidInfo: {
     flex:2
   },
   item: {
@@ -64,7 +48,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     margin: 5
   },
-  job_title: {
+  bid_title: {
     flex: 2,
     paddingTop: 20,
     borderWidth: 1,
