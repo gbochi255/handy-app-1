@@ -41,5 +41,27 @@ describe("POST /register", () => {
           "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp"
         );
       });
-  });
+    });
+    test("400: Invalid request data", async() => {
+      const res = await supertest(app)
+        .post("/register")
+        .send({
+          firstname: "Ian",
+          lastname: "Smith",
+          password: "abc123",
+          postcode: "NG1 4QZ",
+          address: "1 Acacia Avenue",
+          city: "London",
+          avatar_url:
+            "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp",
+          about_me: "I am a new user of the brilliant Handy app.",
+        })
+        expect(res.statusCode).toBe(400)
+        // .then((response) => {
+        //   console.log(response)
+        //   // expect(body.status).toBe(400)
+          // expect(body.message).toBe("Bad request")
+        })
 });
+
+
