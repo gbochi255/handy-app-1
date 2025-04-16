@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
-import SignIn from "./components/SignIn.js";
+import SignIn from "./components/signIn.js";
 import SignUp from "./components/SignUp.js";
 import CameraApp from "./components/CameraApp.js";
 import { UserProvider } from "./components/UserContext";
