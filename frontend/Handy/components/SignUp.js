@@ -1,90 +1,173 @@
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
-import { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { useRoute } from "@react-navigation/native";
-import { Linking } from "react-native";
+import {
+  View,
+  TextInput,
+  Text,
+  Button,
+  TouchableOpacity,
+  Image,
+  Alert,
+  Linking,
+  StyleSheet,
+} from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useContext } from "react";
+import { UserContext } from "./UserContext";
 
 export default function SignUp() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [postcode, setPostcode] = useState("");
-  const [address, setAddress] = useState("");
-  const [bio, setBio] = useState("");
-
   const navigation = useNavigation();
   const route = useRoute();
   const { photoUrl } = route.params || {};
+  const { userData, setUserData } = useContext(UserContext);
 
-  function handleSubmit() {}
+  function handleSubmit() {
+    const { firstName, lastName, email, password, postcode, address, bio } =
+      userData;
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !password ||
+      !postcode ||
+      !address ||
+      !bio ||
+      !photoUrl
+    ) {
+      Alert.alert("Please fill in all fields");
+      return;
+    }
+    Alert.alert("Account created");
+    navigation.navigate("SignIn");
+  }
 
   return (
-    <View>
-      <Text>First Name</Text>
-      <TextInput
-        placeholder="first name"
-        value={firstName}
-        onChangeText={setFirstName}
-      ></TextInput>
-      <Text>Last Name</Text>
-      <TextInput
-        placeholder="last name"
-        value={lastName}
-        onChangeText={setLastName}
-      ></TextInput>
-      <Text>Email</Text>
-      <TextInput
-        placeholder="email"
-        value={email}
-        onChangeText={setEmail}
-      ></TextInput>
-      <Text>Password</Text>
-      <TextInput
-        placeholder="password"
-        value={password}
-        onChangeText={setPassword}
-      ></TextInput>
-      <Text>Post Code</Text>
-      <TextInput
-        placeholder="postcode"
-        value={postcode}
-        onChangeText={setPostcode}
-      ></TextInput>
-      <Text>Address Lookup??</Text>
-      <TextInput
-        placeholder="address lookup"
-        value={address}
-        onChangeText={setAddress}
-      ></TextInput>
-
-      <Button
-        title="Launch Camera"
-        onPress={() => navigation.navigate("CameraApp")}
-      ></Button>
+    <View style={styles.container}>
+      <Image source={require("../assets/logo.jpg")} style={styles.logo} />
 
       <TextInput
-        placeholder="describe yourself"
-        multiline={true}
-        numberOfLine={4}
-        value={bio}
-        onChangeText={setBio}
+        style={styles.input}
+        placeholder="First Name"
+        value={userData.firstName}
+        onChangeText={(text) => setUserData({ ...userData, firstName: text })}
       />
-      <Button title="Submit" onPress={handleSubmit}></Button>
+      <TextInput
+        style={styles.input}
+        placeholder="Last Name"
+        value={userData.lastName}
+        onChangeText={(text) => setUserData({ ...userData, lastName: text })}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        value={userData.email}
+        onChangeText={(text) => setUserData({ ...userData, email: text })}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        secureTextEntry
+        value={userData.password}
+        onChangeText={(text) => setUserData({ ...userData, password: text })}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Postcode"
+        value={userData.postcode}
+        onChangeText={(text) => setUserData({ ...userData, postcode: text })}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Address"
+        value={userData.address}
+        onChangeText={(text) => setUserData({ ...userData, address: text })}
+      />
+
+      <View style={styles.cameraRow}>
+        <TouchableOpacity
+          style={styles.greenButton}
+          onPress={() => navigation.navigate("CameraApp")}
+        >
+          <Text style={styles.buttonText}>Open Camera</Text>
+        </TouchableOpacity>
+        <Text style={styles.selfieLabel}>Take a selfie</Text>
+      </View>
+
+      <TextInput
+        style={[styles.input, styles.bioInput]}
+        placeholder="Describe yourself"
+        multiline
+        value={userData.bio}
+        onChangeText={(text) => setUserData({ ...userData, bio: text })}
+      />
+
+      <TouchableOpacity style={styles.orangeButton} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Submit</Text>
+      </TouchableOpacity>
 
       {photoUrl && (
         <Text
-          style={{
-            color: "blue",
-            textDecorationLine: "underline",
-            marginTop: 10,
-          }}
+          style={styles.photoLink}
           onPress={() => Linking.openURL(photoUrl)}
         >
           View Uploaded Photo
         </Text>
       )}
-      <Button title="provider"></Button>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#f0f0f0",
+  },
+  logo: {
+    width: 150,
+    height: 150,
+    marginBottom: 10,
+    resizeMode: "contain",
+    alignSelf: "center",
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 6,
+    backgroundColor: "#fff",
+    padding: 12,
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  bioInput: {
+    height: 130,
+  },
+  cameraRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  greenButton: {
+    backgroundColor: "#4CAF50",
+    borderRadius: 6,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginRight: 10,
+  },
+  orangeButton: {
+    backgroundColor: "#FF7A00",
+    borderRadius: 6,
+    paddingVertical: 24,
+    marginTop: 30,
+    width: "100%",
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+});
