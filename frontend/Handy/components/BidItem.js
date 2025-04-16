@@ -10,20 +10,32 @@ import { useNavigation } from "@react-navigation/native";
 //   job_id,
 // }
 
+// bid_id: 1,
+// job_id:1,
+// amount: "£20",
+// provider_id: 3,
+// status: "open",
+// created_at: "25/04/25"
 
-export default function JobItem(props) {
-
+export default function BidItem({bidItem}) {
+  
+  
+  console.log(bidItem, "<<<< props in BidItem");
+  
+  const bids = [{}]
   const navigation = useNavigation()
-
+  
 
   return (
     <View>
 
-      <TouchableHighlight onPress={() => navigation.navigate("JobPage", props)} underlayColor="white">
+      <TouchableHighlight onPress={() => navigation.navigate("BidPage", bidItem)} underlayColor="white">
         <View style={styles.item}>
-          <Text style={styles.image_title}>{props.image_title}</Text>
-          <Text style={styles.job_title}>{props.job_title}</Text>
-          <Text style={styles.posted_date}>{props.posted_date}</Text>
+          <Text >Amount: {bidItem.amount}</Text>
+         <Text style={styles.job_title}>Provider: {bidItem.provider_id}</Text>
+         <Text style={styles.posted_date}>Status: {bidItem.status}</Text>
+         <Text style={styles.posted_date}>Bid Date:{bidItem.created_at}</Text>
+
         </View>
       </TouchableHighlight>
 
@@ -41,7 +53,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderRadius: 5,
     height: 120,
-    marginBottom: 10
+    marginBottom:10
   },
   image_title: {
     flex: 1,
@@ -49,13 +61,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     margin: 5,
   },
-  job_title: {
+  bid_title: {
     flex: 2,
     paddingTop: 20,
     borderWidth: 1,
     margin: 5,
   },
-  posted_date: {
+  bid_date: {
     flex: 1,
     paddingTop: 20,
     borderWidth: 1,
