@@ -64,12 +64,12 @@ export default function SignUp() {
     //       email: "",
     //       password: "",
     //       postcode: "",
-    //       region: userData.region,
-    //       long: userData.long,
-    //       lat: userData.lat,
+    //       region: "",
+    //       long: "",
+    //       lat: "",
     //       bio: "",
-    //       isProvider: false,
     //       photoUrl: null,
+    //       isProvider: false,
     //     });
     //   })
     //   .then((err) => {
@@ -82,19 +82,21 @@ export default function SignUp() {
 
   function handlePostcodeLookup() {
     axios
-      .get(`https://api.postcodes.io/postcodes/${userData.postcode}`)
+      .get(
+        `https://api.geoapify.com/v1/postcode/search?postcode=${userData.postcode}&countrycode=gb&apiKey=d779b7f845cb429d96619e265d148015`
+      )
       .then(({ data }) => {
-        console.log(data);
+        console.log(data.features[0].properties.city);
+        console.log(data.features[0].properties.county);
+        console.log(data.features[0].properties.lon);
+        console.log(data.features[0].properties.lat);
+
         setUserData({
           ...userData,
-          region: data.result.region,
-          long: data.result.longitude,
-          lat: data.result.latitude,
+          region: data.features[0].properties.city, // try data.features[0].properties.county maybe? I got Manchester instead of Rochdale
+          long: data.features[0].properties.lon,
+          lat: data.features[0].properties.lat,
         });
-
-        console.log(data.result.region);
-        console.log(data.result.longitude);
-        console.log(data.result.latitude);
       })
       .catch((error) => {
         Alert.alert("Postcode not found!");
@@ -166,7 +168,7 @@ export default function SignUp() {
 
             <View style={styles.readOnlyInput}>
               <Text style={styles.readOnlyText}>
-                {userData.region || "*** Region ***"}
+                {userData.region || "*** City ***"}
               </Text>
             </View>
 
