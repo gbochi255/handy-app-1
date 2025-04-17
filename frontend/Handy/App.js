@@ -15,6 +15,14 @@ import BidPage from "./components/BidPage.js";
 import PostJob from "./components/PostJob.js";
 
 
+
+import Login from "./components/Chat/Login.js";
+import Chat from "./components/Chat/Chat.js";
+import ChatComponent from "./components/Chat/ChatComponent.js";
+import Messaging from "./components/Chat/Messaging.js";
+import MessageComponent from "./components/Chat/MessageComponent.js";
+import Modal from "./components/Chat/Modal.js";
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -32,6 +40,15 @@ export default function App() {
           <Stack.Screen name="BidItem" component={BidItem} />
           <Stack.Screen name="BidPage" component={BidPage} />
           <Stack.Screen name="PostJob" component={PostJob} />
+          
+
+          <Stack.Screen name='Login' component={Login} options={{ headerShown: false }}/>
+          <Stack.Screen name='Chat' component={Chat}/>
+          <Stack.Screen name='ChatComponent' component={ChatComponent}/>
+          <Stack.Screen name='Messaging' component={Messaging}/>
+          <Stack.Screen name='MessageComponent' component={MessageComponent}/>
+          <Stack.Screen name='Modal' component={Modal}/>
+    
         </Stack.Navigator>
       </NavigationContainer>
     </UserProvider>
