@@ -1,5 +1,5 @@
 import { StyleSheet, View, Image } from "react-native";
-
+//change customer page to this later
 export default function Header() {
   return (
     <View style={styles.headerContainer}>

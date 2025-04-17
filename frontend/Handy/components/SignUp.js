@@ -93,7 +93,7 @@ export default function SignUp() {
 
         setUserData({
           ...userData,
-          region: data.features[0].properties.city, // try data.features[0].properties.county maybe? I got Manchester instead of Rochdale
+          region: data.features[0].properties.city, // try this data.features[0].properties.county maybe? I got Manchester instead of Rochdale
           long: data.features[0].properties.lon,
           lat: data.features[0].properties.lat,
         });

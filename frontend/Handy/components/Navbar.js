@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-
+//change customer page to this later
 export default function Navbar() {
   const navigation = useNavigation();
 
