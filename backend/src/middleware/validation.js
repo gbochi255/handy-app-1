@@ -1,4 +1,3 @@
-// backend/src/middleware/validation.js
 
 // User registration validation
 exports.validateRegistration = (req, res, next) => {

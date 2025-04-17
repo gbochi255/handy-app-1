@@ -33,6 +33,15 @@ function handleDBErrors(error, request, response, next) {
       detail: error.detail,
     });
   }
+
+
+  // if (err.code === '23505') { // PostgreSQL unique violation
+  //   return response.status(409).send({
+  //     error: 'Conflict',
+  //     message: 'Email address is already registered',
+  //     detail: error.detail
+  //   })};
+
   
   next(error);
 }
