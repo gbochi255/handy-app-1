@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const { loginUser, createUser } = require("./src/controllers/userController");
+const { getJobs } = require("./src/controllers/jobController")
 const { validateRegistration, validateLogin, handleDefaultErrors, handleDBErrors } = require("./src/middleware");
 const baseurl = "";
 
@@ -10,6 +11,8 @@ app.use(express.json());
 app.post(`${baseurl}/register`, validateRegistration, createUser);
 
 app.post(`${baseurl}/login`, validateLogin, loginUser);
+
+app.get(`${baseurl}/jobs`, getJobs)
 
 
 // handle invalid routes gracefully
