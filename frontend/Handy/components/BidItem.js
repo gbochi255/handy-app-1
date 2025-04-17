@@ -17,10 +17,9 @@ import { useNavigation } from "@react-navigation/native";
 // status: "open",
 // created_at: "25/04/25"
 
-export default function BidItem({bidItem}) {
+export default function BidItem({bidItem, jobDetes}) {
   
-  
-  console.log(bidItem, "<<<< props in BidItem");
+
   
   const bids = [{}]
   const navigation = useNavigation()
@@ -29,7 +28,7 @@ export default function BidItem({bidItem}) {
   return (
     <View>
 
-      <TouchableHighlight onPress={() => navigation.navigate("BidPage", bidItem)} underlayColor="white">
+      <TouchableHighlight onPress={() => navigation.navigate("BidPage", [bidItem, jobDetes])} underlayColor="white">
         <View style={styles.item}>
           <Text >Amount: {bidItem.amount}</Text>
          <Text style={styles.job_title}>Provider: {bidItem.provider_id}</Text>

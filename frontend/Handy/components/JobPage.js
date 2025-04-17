@@ -4,7 +4,7 @@ import testBidData from "../assets/testBidData";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import BidItem from "./BidItem"
 export default function JobPage({ route: { params } }) {
-  
+  const jobDetails = params
   return (
     <View>
       <View style={styles.jobMetaData}>
@@ -25,9 +25,10 @@ export default function JobPage({ route: { params } }) {
                         data={testBidData}
                         renderItem={({item})=>  <BidItem 
                         bidItem={item}
+                        jobDetes={jobDetails}
                       
                         />}
-                        keyExtractor={item => item.job_id}
+                        keyExtractor={item => item.bid_id}
                       />
                      </SafeAreaView> 
                 
