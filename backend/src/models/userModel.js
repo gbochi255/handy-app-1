@@ -35,14 +35,14 @@ exports.postUser = ({
       return rows[0];
     })
     .catch((error) => {
-      // throw error;
-      if (err.code === '23505') { // PostgreSQL unique violation
-        return response.status(409).send({
-          error: 'Conflict',
-          message: 'Email address is already registered',
+      if (error.code === '23505') { // PostgreSQL unique violation
+        return Promise.reject({
+          status: 409,
+          message: 'Email address already exists',
           detail: error.detail
-        });
-    }});
+        })
+      }
+    });
 };
 
 exports.postLogin = ({ email, password }) => {

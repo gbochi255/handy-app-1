@@ -50,7 +50,7 @@ describe("POST /register", () => {
       .send({
         firstname: "Ian",
         lastname: "Smith",
-        email: "ian.smith@gmail.com",
+        email: "alice@ukmail.com",
         password: "abc123",
         postcode: "NG1 4QZ",
         address: "1 Acacia Avenue",
@@ -61,8 +61,6 @@ describe("POST /register", () => {
       })
       .expect(409)
       .then(({ body: error }) => {
-        console.log(error);
-        expect(error.error).toBe("Conflict")
         expect(error.message).toBe("Email address already exists");
       });
   });
