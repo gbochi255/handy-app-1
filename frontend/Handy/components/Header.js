@@ -1,13 +1,31 @@
-import { StyleSheet, View, Image } from "react-native";
-//change customer page to this later
+import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
+import { useContext } from "react";
+import { UserContext } from "./UserContext";
+import { useNavigation } from "@react-navigation/native";
+
 export default function Header() {
+  const navigation = useNavigation();
+  const { userData, setUserData } = useContext(UserContext);
+  const defaultImage = (
+    <Image
+      source={require("../assets/profileicon.jpg")}
+      style={styles.profileIcon}
+    />
+  );
+  const profileImage = (
+    <Image
+      source={require("../assets/defaultProfile.png")}
+      style={styles.profileIcon}
+    />
+  );
+
   return (
     <View style={styles.headerContainer}>
-      <Image source={require("../assets/logo.jpg")} style={styles.logo} />
-      <Image
-        source={require("../assets/profileicon.jpg")}
-        style={styles.profileIcon}
-      />
+      <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
+        <Image source={require("../assets/logo.jpg")} style={styles.logo} />
+      </TouchableOpacity>
+
+      {!userData.token ? defaultImage : profileImage}
     </View>
   );
 }

@@ -1,5 +1,7 @@
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet, View, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import SegmentedHeader from "./SegmentedHeader";
+
 //change customer page to this later
 export default function Navbar() {
   const navigation = useNavigation();
