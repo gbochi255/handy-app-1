@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, TouchableHighlight } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import { JobPage } from "./JobPage";
 import { useNavigation } from "@react-navigation/native";
-
+import { Card } from "react-native-paper";
 
 // {
 //   image_title,
@@ -10,55 +10,73 @@ import { useNavigation } from "@react-navigation/native";
 //   job_id,
 // }
 
-
 export default function JobItem(props) {
-
-  const navigation = useNavigation()
-
+  const navigation = useNavigation();
 
   return (
-    <View>
-
-      <TouchableHighlight onPress={() => navigation.navigate("JobPage", props)} underlayColor="white">
-        <View style={styles.item}>
-          <Text style={styles.image_title}>{props.image_title}</Text>
-          <Text style={styles.job_title}>{props.job_title}</Text>
-          <Text style={styles.posted_date}>{props.posted_date}</Text>
+    <Card
+      style={styles.card}
+      onPress={() => navigation.navigate("JobPage", props)}
+    >
+      <Card.Content>
+        <View style={styles.row}>
+          <Image
+            source={{
+              uri: `https://picsum.photos/seed/${props.job_id}/200/200`,
+            }}
+            style={styles.image}
+          />
+          <View style={styles.middleContent}>
+            <Text style={styles.jobTitle}>{props.job_title}</Text>
+            <Text style={styles.postedDate}>{props.posted_date}</Text>
+          </View>
+          <View style={styles.rightContent}>
+            <Text style={styles.distanceLabel}>Distance</Text>
+            <Text style={styles.distanceValue}>{props.distance} miles</Text>
+          </View>
         </View>
-      </TouchableHighlight>
-
-    </View>
+      </Card.Content>
+    </Card>
   );
 }
 
 const styles = StyleSheet.create({
-  item: {
-    alignitems: "center",
-    paddingHorizontal: 5, // left & right
-    borderColor: "rgb(199, 194, 191)",
-    borderWidth: 3,
-    margin: 3,
+  card: {
+    margin: 10,
+    borderRadius: 8,
+  },
+  row: {
     flexDirection: "row",
-    borderRadius: 5,
-    height: 120,
-    marginBottom: 10
+    alignItems: "center",
   },
-  image_title: {
+  image: {
+    width: 80,
+    height: 80,
+    borderRadius: 6,
+    marginRight: 10,
+  },
+  middleContent: {
     flex: 1,
-    paddingTop: 20,
-    borderWidth: 1,
-    margin: 5,
+    justifyContent: "center",
   },
-  job_title: {
-    flex: 2,
-    paddingTop: 20,
-    borderWidth: 1,
-    margin: 5,
+  jobTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
   },
-  posted_date: {
-    flex: 1,
-    paddingTop: 20,
-    borderWidth: 1,
-    margin: 5,
+  postedDate: {
+    fontSize: 14,
+    color: "gray",
+  },
+  rightContent: {
+    justifyContent: "center",
+    alignItems: "flex-end",
+  },
+  distanceLabel: {
+    fontSize: 12,
+    color: "gray",
+  },
+  distanceValue: {
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
