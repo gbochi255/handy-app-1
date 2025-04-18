@@ -1,26 +1,22 @@
 import { StyleSheet, View, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import SegmentedHeader from "./SegmentedHeader";
 
-//change customer page to this later
 export default function Navbar() {
   const navigation = useNavigation();
 
   return (
-    <View>
-      <View style={styles.navbarButtonContainer}>
-        <View style={styles.customerButton}>
-          <Button
-            title="Customer"
-            onPress={() => navigation.navigate("CustomerHomepage")}
-          />
-        </View>
-        <View style={styles.providerButton}>
-          <Button
-            title="Provider"
-            onPress={() => navigation.navigate("ProviderHomepage")}
-          />
-        </View>
+    <View style={styles.navbarButtonContainer}>
+      <View style={styles.customerButton}>
+        <Button
+          title="Customer"
+          onPress={() => navigation.navigate("CustomerHomepage")}
+        />
+      </View>
+      <View style={styles.providerButton}>
+        <Button
+          title="Provider"
+          onPress={() => navigation.navigate("ProviderHomepage")}
+        />
       </View>
     </View>
   );
@@ -31,7 +27,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     margin: 20,
-    marginBottom: 40,
+    marginBottom: 0,
     marginLeft: 60,
     marginRight: 60,
     borderColor: "rgb(0, 0, 0)",
