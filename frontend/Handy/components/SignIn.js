@@ -11,12 +11,30 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
+import { useEffect } from "react";
 
 export default function SignIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { setUserData } = useContext(UserContext);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    setUserData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      postcode: "",
+      region: "",
+      long: "",
+      lat: "",
+      bio: "",
+      photoUrl: "",
+      isProvider: false,
+      token: false,
+    });
+  }, []);
 
   function verifyUser() {
     setUserData({

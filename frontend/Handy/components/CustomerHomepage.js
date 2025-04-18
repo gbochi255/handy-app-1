@@ -1,10 +1,7 @@
-import { useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  TextInput,
-  Button,
   FlatList,
   TouchableOpacity,
 } from "react-native";
@@ -12,6 +9,8 @@ import { useNavigation } from "@react-navigation/native";
 import testJobData from "../assets/testJobData";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import JobItem from "./JobItem";
+import Navbar from "./Navbar";
+import Header from "./Header";
 
 export default function CustomerHomepage() {
   const navigation = useNavigation();
@@ -22,19 +21,8 @@ export default function CustomerHomepage() {
 
   return (
     <View style={styles.appContainer}>
-      {/* navbar section */}
-      <View style={styles.navbarButtonContainer}>
-        <View style={styles.customerButton}>
-          <Button title="Customer" />
-        </View>
-
-        <View style={styles.providerButton}>
-          <Button
-            title="Provider"
-            onPress={() => navigation.navigate("ProviderHomepage")}
-          />
-        </View>
-      </View>
+      <Header />
+      <Navbar />
 
       {/* main section */}
       <View>
@@ -79,8 +67,7 @@ const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
     paddingTop: 20,
-    paddingHorizontal: 16, // left & right
-    borderWidth: 10,
+    paddingHorizontal: 16,
   },
 
   navbarButtonContainer: {
