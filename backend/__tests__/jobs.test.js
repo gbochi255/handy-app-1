@@ -8,12 +8,12 @@ afterAll(async () => {
 });
 
 describe("GET: /jobs", () => {
-    test("200: Respond with an array of all job objects", () => {
+    test("200: Respond with an array of all job records", () => {
         return supertest(app)
             .get("/jobs")
             .expect(200)
             .then(({ body: { jobs } }) => {
-                expect(jobs.length).toBe(5)
+                expect(jobs.length).toBe(20)
                 jobs.forEach((job) => {
                     expect(job).toHaveProperty("job_id")
                     expect(job).toHaveProperty("summary")
@@ -32,7 +32,7 @@ describe("GET: /jobs", () => {
         .get("/jobs?status=open")
         .expect(200)
         .then(({ body: { jobs } }) => {
-            expect(jobs.length).toBe(4)
+            expect(jobs.length).toBe(13)
             jobs.forEach((job) => {
                 expect(job).toHaveProperty("job_id")
                 expect(job).toHaveProperty("summary")
@@ -51,7 +51,7 @@ describe("GET: /jobs", () => {
         .get("/jobs?created_by=2")
         .expect(200)
         .then(({ body: { jobs } }) => {
-            expect(jobs.length).toBe(1)
+            expect(jobs.length).toBe(2)
             const job = jobs[0]
             expect(job).toHaveProperty("job_id")
             expect(job).toHaveProperty("summary")
@@ -81,5 +81,54 @@ describe("GET: /jobs", () => {
             expect(job).toHaveProperty("target_date")
             expect(job).toHaveProperty("location")
         })
+    })
+})
+describe ("GET: /jobs/client - client view jobs endpoint", ()=>{
+    test("200: Returns all jobs with with bid info", () => {
+        return supertest(app)
+            // .get("/jobs/client?client_id=1&status=open")
+            .get("/jobs/client")
+            .expect(200)
+            .then(({ body: { jobs } }) => {
+                expect(jobs.length).toBe(20)
+                jobs.forEach((job) => {
+                    expect(job).toHaveProperty("job_id")
+                    expect(job).toHaveProperty("summary")
+                    expect(job).toHaveProperty("job_detail")
+                    expect(job).toHaveProperty("category")
+                    expect(job).toHaveProperty("created_by")
+                    expect(job).toHaveProperty("status")
+                    expect(job).toHaveProperty("photo_url")
+                    expect(job).toHaveProperty("target_date")
+                    expect(job).toHaveProperty("location")
+                    expect(job).toHaveProperty("bid_count")
+                    expect(job).toHaveProperty("best_bid")
+
+                });
+            })
+    })
+    test("200: Returns all jobs with with status 'open'", () => {
+        return supertest(app)
+            .get("/jobs/client?status=open")
+            .expect(200)
+            .then(({ body: { jobs } }) => {
+                expect(jobs.length).toBe(13)
+            })
+    })
+    test("200: Returns all jobs with with client_id 2", () => {
+        return supertest(app)
+            .get("/jobs/client?client_id=2")
+            .expect(200)
+            .then(({ body: { jobs } }) => {
+                expect(jobs.length).toBe(2)
+            })
+    })
+    test("200: Returns all jobs with both client_id AND status", () => {
+        return supertest(app)
+            .get("/jobs/client?client_id=2&status=completed")
+            .expect(200)
+            .then(({ body: { jobs } }) => {
+                expect(jobs.length).toBe(1)
+            })
     })
 })

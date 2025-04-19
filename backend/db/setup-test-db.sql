@@ -6,7 +6,7 @@ CREATE EXTENSION postgis;
 
 
 -- Create ENUM types for status (optional)
-CREATE TYPE job_status AS ENUM ('open', 'in_progress', 'closed');
+CREATE TYPE job_status AS ENUM ('open', 'in_progress', 'completed', 'expired');
 CREATE TYPE bid_status AS ENUM ('pending', 'accepted', 'rejected');
 
 -- Users table
