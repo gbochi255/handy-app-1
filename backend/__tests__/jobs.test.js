@@ -86,7 +86,6 @@ describe("GET: /jobs", () => {
 describe ("GET: /jobs/client - client view jobs endpoint", ()=>{
     test("200: Returns all jobs with with bid info", () => {
         return supertest(app)
-            // .get("/jobs/client?client_id=1&status=open")
             .get("/jobs/client")
             .expect(200)
             .then(({ body: { jobs } }) => {
@@ -152,3 +151,92 @@ describe ("GET: /jobs/client - client view jobs endpoint", ()=>{
           });
       });
 })
+describe("GET /jobs/provider", () => {
+    test("200: Returns jobs within default distance", () => {
+      return supertest(app)
+        .get("/jobs/provider?user_id=41") // Quinn
+        .expect(200)
+        .then(response => {
+            console.log(response.body)
+          response.body.jobs.forEach(job => {
+            expect(job).toHaveProperty("job_id");
+            expect(job).toHaveProperty("summary");
+            expect(job).toHaveProperty("category");
+            expect(job).toHaveProperty("distance");
+            expect(job.distance).toBeLessThanOrEqual(10); // Default distance
+          });
+        });
+    });
+  
+    test("200: Filters jobs by status and custom distance", () => {
+      return supertest(app)
+        .get("/jobs/provider?user_id=42&status=open&distance=5") // Rachel
+        .expect(200)
+        .then(response => {
+          response.body.jobs.forEach(job => {
+            expect(job.status).toBe("open");
+            expect(job.distance).toBeLessThanOrEqual(5);
+          });
+        });
+    });
+  
+    test("400: Rejects missing user_id", () => {
+      return supertest(app)
+        .get("/jobs/provider")
+        .expect(400)
+        .then(response => {
+            const { body } = response;
+            console.log(body)
+            expect(body.message).toBe( "User ID is required" );
+            expect(body.status).toBe( 400 );
+        });
+    });
+  
+    test("404: Rejects invalid user_id", () => {
+      return supertest(app)
+        .get("/jobs/provider?user_id=9999")
+        .expect(404)
+        .then(response => {
+            const { body } = response;
+            expect(body.message).toBe( "Provider ID not found");
+            expect(body.status).toBe(404);
+        });
+    });
+  
+    test("404: Rejects user_id that is not a provider", () => {
+      return supertest(app)
+        .get("/jobs/provider?user_id=1") // Adam (not a provider)
+        .expect(404)
+        .then(response => {
+            const { body } = response;
+            console.log(body)
+            expect(body.message).toBe( "User is not a provider" );
+            expect(body.status).toBe( 404 );
+        });
+    });
+  
+    test("400: Rejects invalid status", () => {
+      return supertest(app)
+        .get("/jobs/provider?user_id=41&status=invalid")
+        .expect(400)
+        .then(response => {
+          const { body } = response;
+          console.log(body)
+          expect(body.message).toBe( "Invalid status value" );
+          expect(body.status).toBe( 400 );
+
+        });
+    });
+  
+    test("400: Rejects invalid distance", () => {
+      return supertest(app)
+        .get("/jobs/provider?user_id=41&distance=-5")
+        .expect(400)
+        .then(response => {
+          const { body } = response;
+          console.log(body)
+          expect(body.message).toBe( "Distance must be a positive number" );
+          expect(body.status).toBe( 400 );
+        });
+    });
+  });
