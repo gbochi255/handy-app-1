@@ -12,6 +12,9 @@ export default function SignUp() {
   function handleSubmit() {}
 
   return (
+    <KeyboardAvoidingView>
+      <TouchableWithoutFeedback>
+      <ScrollView>
     <View>
       <Text>First Name</Text>
       <TextInput
