@@ -131,4 +131,24 @@ describe ("GET: /jobs/client - client view jobs endpoint", ()=>{
                 expect(jobs.length).toBe(1)
             })
     })
+    test("400: Rejects invalid status", () => {
+        return supertest(app)
+          .get("/jobs/client?client_id=1&status=invalid")
+          .expect(400)
+          .then((response) => {
+          const { body } = response;
+          expect(body.status).toBe(400);
+          expect(body.message).toBe("Bad request");
+          });
+      });
+    test("404: User doesn't exist", () => {
+        return supertest(app)
+          .get("/jobs/client?client_id=9999")
+          .expect(404)
+          .then((response) => {
+          const { body } = response;
+          expect(body.status).toBe(404);
+          expect(body.message).toBe("User ID not found");
+          });
+      });
 })

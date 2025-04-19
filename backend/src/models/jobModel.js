@@ -1,4 +1,5 @@
 const db = require("../../db/connection")
+const { checkUserExists } = require("../utils/validation");
 
 exports.fetchJobs = ( created_by, status ) => {
 
@@ -23,40 +24,48 @@ exports.fetchJobs = ( created_by, status ) => {
 exports.fetchClientJobs = (client_id, status) => {
     console.log("Running fetchClientJobs");
   
-    let queryStr = `
-      SELECT j.*,
-             COUNT(b.bid_id) AS bid_count,
-             MIN(b.amount) AS best_bid
-      FROM jobs j
-      LEFT JOIN bids b ON j.job_id = b.job_id
-    `;
+    const validateClient = client_id
+      ? checkUserExists(client_id)
+      : Promise.resolve();
   
-    const queryParams = [];
-    const conditions = [];
+    return validateClient
+      .then(() => {
+        let queryStr = `
+          SELECT j.*,
+                 COUNT(b.bid_id) AS bid_count,
+                 MIN(b.amount) AS best_bid
+          FROM jobs j
+          LEFT JOIN bids b ON j.job_id = b.job_id
+        `;
   
-    if (client_id) {
-      conditions.push(`j.created_by = $${queryParams.length + 1}`);
-      queryParams.push(client_id);
-    }
+        const queryParams = [];
+        const conditions = [];
   
-    if (status) {
-      conditions.push(`j.status = $${queryParams.length + 1}`);
-      queryParams.push(status);
-    }
+        if (client_id) {
+          conditions.push(`j.created_by = $${queryParams.length + 1}`);
+          queryParams.push(client_id);
+        }
   
-    if (conditions.length > 0) {
-      queryStr += " WHERE " + conditions.join(" AND ");
-    }
+        if (status) {
+          conditions.push(`j.status = $${queryParams.length + 1}`);
+          queryParams.push(status);
+        }
   
-    queryStr += `
-      GROUP BY j.job_id
-      ORDER BY j.date_posted DESC
-    `;
+        if (conditions.length > 0) {
+          queryStr += " WHERE " + conditions.join(" AND ");
+        }
   
-    console.log("QueryStr:", queryStr, queryParams);
+        queryStr += `
+          GROUP BY j.job_id
+          ORDER BY j.date_posted DESC
+        `;
   
-    return db.query(queryStr, [...queryParams])
+        console.log("QueryStr:", queryStr, queryParams);
+  
+        return db.query(queryStr, [...queryParams]);
+      })
       .then(({ rows }) => {
-        return rows; 
+        console.log("returned:", rows.length);
+        return rows;
       });
   };
