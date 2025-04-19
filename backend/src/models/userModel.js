@@ -11,7 +11,6 @@ exports.postUser = ({
   about_me,
   avatar_url,
 }) => {
-  console.log("running postUser");
 
   return db
     .query(
@@ -31,7 +30,6 @@ exports.postUser = ({
       ]
     )
     .then(({ rows }) => {
-      console.log("Rows returned:", rows);
       return rows[0];
     })
     .catch((error) => {
@@ -49,7 +47,6 @@ exports.postLogin = ({ email, password }) => {
   return db
     .query(`SELECT * FROM users WHERE email = $1`, [email])
     .then(({ rows }) => {
-      console.log("Rows returned:", rows);
       if (rows.length === 0 || rows[0].password !== password) {
         return Promise.reject({
           status: 401,

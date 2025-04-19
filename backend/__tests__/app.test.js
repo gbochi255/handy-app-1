@@ -109,7 +109,6 @@ describe("POST /login", () => {
       .expect(401)
       .then((response) => {
         const { body } = response;
-        console.log(body);
         expect(body.message).toBe("Invalid email or password");
       });
   });
@@ -120,7 +119,6 @@ describe("POST /login", () => {
       .expect(401)
       .then((response) => {
         const { body } = response;
-        console.log(body);
         expect(body.message).toBe("Invalid email or password");
       });
   });

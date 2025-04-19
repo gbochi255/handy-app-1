@@ -18,8 +18,6 @@ exports.createUser = (request, response, next) => {
 // if no match, return 401
 
 exports.loginUser = (request, response, next) => {
-  console.log("Next:", next)
-  console.log("login flow");
   const loginUser = request.body;
   postLogin(loginUser)
     .then((user) => {
