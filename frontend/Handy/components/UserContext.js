@@ -1,5 +1,11 @@
 import { createContext, useState } from "react";
+<<<<<<< HEAD
 export const UserContext = createContext();
+=======
+
+export const UserContext = createContext();
+
+>>>>>>> origin
 export const UserProvider = ({ children }) => {
   const [userData, setUserData] = useState({
     firstName: "",
@@ -7,7 +13,10 @@ export const UserProvider = ({ children }) => {
     email: "",
     password: "",
     postcode: "",
+<<<<<<< HEAD
     address: "",
+=======
+>>>>>>> origin
     region: "",
     long: "",
     lat: "",
@@ -22,4 +31,8 @@ export const UserProvider = ({ children }) => {
       {children}
     </UserContext.Provider>
   );
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> origin
