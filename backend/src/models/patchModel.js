@@ -19,7 +19,7 @@ exports.updateJobComplete = (job_id) => {
                     message: 'Job Not found',
                 })
             }
-            return rows[0]
+            return rows[0];
         })
 }
 
@@ -39,19 +39,40 @@ exports.updateBidAccept = (job_id, bid_id) => {
     return db.query(queryStr, [job_id, bid_id])
         .then(({ rows }) => {
             if (rows.length === 0) {
-                console.log(rows)
                 return Promise.reject({
                     status: 404,
                     message: 'Job Not found',
                 })
             }
             const bidExists = rows.some(row => row.bid_id === bid_id)
-            if(!bidExists) {
+            if (!bidExists) {
                 return Promise.reject({
                     status: 404,
                     message: 'Bid Not found',
                 })
             }
-            return rows
+            return rows;
+        })
+}
+
+
+exports.updateProviderStatus = (user_id, isProvider) => {
+    let queryStr = `
+    UPDATE users
+    SET is_provider = $2
+    WHERE user_id = $1
+    RETURNING *
+    `
+
+    return db.query(queryStr, [user_id, isProvider])
+        .then(({ rows }) => {
+            if (rows.length === 0) {
+                return Promise.reject({
+                    status: 404,
+                    message: 'User Not found',
+                })
+            }
+            // console.log(rows)
+            return rows[0];
         })
 }

@@ -89,3 +89,40 @@ describe("PATCH: /jobs/:job_id/accept/:bid_id", () => {
         })
     })
 })
+
+describe("PATCH: /users/:user_id", () => {
+    test("Returns user object with updated provider_status (true)", () => {
+        return supertest(app)
+        .patch("/users/2")
+        .send({isProvider : true})
+        .expect(200)
+        .then(response => {
+            const { body } = response;
+            console.log(body)
+            expect(body.user_id).toBe(2)
+            expect(body.is_provider).toBe(true)
+        })
+    })
+    test("Returns user object with updated provider_status (false)", () => {
+        return supertest(app)
+        .patch("/users/42")
+        .send({isProvider : false})
+        .expect(200)
+        .then(response => {
+            const { body } = response;
+            console.log(body)
+            expect(body.user_id).toBe(42)
+            expect(body.is_provider).toBe(false)
+        })
+    })
+    test("Returns 404 when user does not exist", () => {
+        return supertest(app)
+        .patch("/users/61")
+        .send({isProvider : true})
+        .expect(404)
+        .then(response => {
+            const { body } = response;
+            expect(body.message).toBe("User Not found")
+        })
+    })
+})
