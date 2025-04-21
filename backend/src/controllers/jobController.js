@@ -32,7 +32,8 @@ exports.getClientJobs = (request, response, next) => {
 exports.getProviderJobs = (request, response, next) => {
     console.log("Running getProviderJobs");
   
-    const { user_id, distance, status } = request.query;
+    const { distance, status } = request.query;
+    const {provider_id: user_id} = request.params
     console.log("user_id:", user_id);
     console.log("distance:", distance);
     console.log("status:", status);

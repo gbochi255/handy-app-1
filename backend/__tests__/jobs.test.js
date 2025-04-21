@@ -158,13 +158,14 @@ describe ("GET: /jobs/client - client view jobs endpoint", ()=>{
           });
       });
 })
-describe("GET /jobs/provider", () => {
+describe("GET /jobs/provider/provider_id", () => {
     test("200: Returns jobs within default distance, nearest first", () => {
       return supertest(app)
-        .get("/jobs/provider?user_id=41") // Quinn
+        .get("/jobs/provider/41") // Quinn
         .expect(200)
         .then(response => {
             const {jobs}=response.body
+            expect(jobs.length).toBe(16)
             jobs.forEach(job => {
             expect(job).toHaveProperty("job_id");
             expect(job).toHaveProperty("summary");
@@ -180,7 +181,7 @@ describe("GET /jobs/provider", () => {
   
     test("200: Filters jobs by status and custom distance", () => {
       return supertest(app)
-        .get("/jobs/provider?user_id=42&status=open&distance=5") // Rachel
+        .get("/jobs/provider/42?status=open&distance=5") // Rachel
         .expect(200)
         .then(response => {
           response.body.jobs.forEach(job => {
@@ -192,28 +193,16 @@ describe("GET /jobs/provider", () => {
   
     test("200: Returns empty array if no jobs within distance", () => {
         return supertest(app)
-          .get("/jobs/provider?user_id=41&distance=0.01")
+          .get("/jobs/provider/41?distance=0.01")
           .expect(200)
           .then(response => {
             expect(response.body.jobs).toEqual([]);
           });
       });
 
-    test("400: Rejects missing user_id", () => {
-      return supertest(app)
-        .get("/jobs/provider")
-        .expect(400)
-        .then(response => {
-            const { body } = response;
-            console.log(body)
-            expect(body.message).toBe( "User ID is required" );
-            expect(body.status).toBe( 400 );
-        });
-    });
-  
     test("404: Rejects invalid user_id", () => {
       return supertest(app)
-        .get("/jobs/provider?user_id=9999")
+        .get("/jobs/provider/9999")
         .expect(404)
         .then(response => {
             const { body } = response;
@@ -224,7 +213,7 @@ describe("GET /jobs/provider", () => {
   
     test("404: Rejects user_id that is not a provider", () => {
       return supertest(app)
-        .get("/jobs/provider?user_id=1") // Adam (not a provider)
+        .get("/jobs/provider/1") // Adam (not a provider)
         .expect(404)
         .then(response => {
             const { body } = response;
@@ -236,7 +225,7 @@ describe("GET /jobs/provider", () => {
   
     test("400: Rejects invalid status", () => {
       return supertest(app)
-        .get("/jobs/provider?user_id=41&status=invalid")
+        .get("/jobs/provider/41?status=invalid")
         .expect(400)
         .then(response => {
           const { body } = response;
@@ -249,7 +238,7 @@ describe("GET /jobs/provider", () => {
   
     test("400: Rejects invalid distance", () => {
       return supertest(app)
-        .get("/jobs/provider?user_id=41&distance=-5")
+        .get("/jobs/provider/41?distance=-5")
         .expect(400)
         .then(response => {
           const { body } = response;
@@ -420,7 +409,7 @@ describe("GET /jobs/provider", () => {
             });
       });
     });
-describe.only("POST /jobs", ()=>{
+describe("POST /jobs", ()=>{
   test("200: Successfully add a job", ()=>{
     return supertest(app)
     .post("/jobs/create")
