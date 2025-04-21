@@ -1,5 +1,6 @@
 const { promises } = require("supertest/lib/test");
 const { fetchJobs, fetchClientJobs, fetchProviderJobs } = require("../models/jobModel")
+const jobModel = require("../models/jobModel")
 
 exports.getJobs = (request, response, next) => {
 
@@ -63,6 +64,34 @@ exports.getProviderJobs = (request, response, next) => {
     }
   
     fetchProviderJobs(user_id, parsedDistance, status)
+      .then(jobs => {
+        response.status(200).send({ jobs });
+      })
+      .catch(next);
+  };
+
+  exports.getProviderBids = (request, response, next) => {
+    console.log("Running getProviderBids");
+  
+    const { provider_id } = request.params;
+    console.log("provider_id:", provider_id);
+  
+    jobModel
+      .fetchProviderBids(provider_id)
+      .then(jobs => {
+        response.status(200).send({ jobs });
+      })
+      .catch(next);
+  };
+  
+  exports.getProviderWonJobs = (request, response, next) => {
+    console.log("Running getProviderWonJobs");
+  
+    const { provider_id } = request.params;
+    console.log("provider_id:", provider_id);
+  
+    jobModel
+      .fetchProviderWonJobs(provider_id)
       .then(jobs => {
         response.status(200).send({ jobs });
       })

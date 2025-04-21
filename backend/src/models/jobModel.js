@@ -24,9 +24,10 @@ exports.fetchJobs = ( created_by, status ) => {
 exports.fetchClientJobs = (client_id, status) => {
     console.log("Running fetchClientJobs");
   
-    const validateClient = client_id
-      ? checkUserExists(client_id)
-      : Promise.resolve();
+    let validateClient = Promise.resolve();
+    if (client_id) {
+      validateClient = checkUserExists(client_id);
+    }
   
     return validateClient
       .then(() => {
@@ -73,34 +74,28 @@ exports.fetchClientJobs = (client_id, status) => {
   exports.fetchProviderJobs = (user_id, distance = 10, status) => {
     console.log("Running fetchProviderJobs");
   
-    return db.query("SELECT location, is_provider FROM users WHERE user_id = $1", [user_id])
-      .then(({ rows }) => {
-        if (rows.length === 0) {
-          const error = new Error("Provider ID not found");
-          error.status = 404;
-          throw error;
-        }
-  
-        const user = rows[0];
-        if (!user.is_provider) {
-          const error = new Error("User is not a provider");
-          error.status = 404;
-          throw error;
-        }
-  
+    return checkUserExists(user_id, true)
+      .then(() => {
         let queryStr = `
           SELECT j.*,
                  ROUND(
-                   (ST_Distance($1::geography, j.location::geography) / 1609.34)::numeric,
+                   (ST_Distance(
+                     (SELECT location FROM users WHERE user_id = $1)::geography,
+                     j.location::geography
+                   ) / 1609.34)::numeric,
                    3
                  )::double precision AS distance
           FROM jobs j
         `;
   
-        const queryParams = [user.location];
+        const queryParams = [user_id];
         const conditions = [];
   
-        conditions.push(`ST_DWithin($1::geography, j.location::geography, $2)`);
+        conditions.push(`ST_DWithin(
+          (SELECT location FROM users WHERE user_id = $1)::geography,
+          j.location::geography,
+          $2
+        )`);
         queryParams.push(distance * 1609.34);
   
         if (status) {
@@ -113,7 +108,10 @@ exports.fetchClientJobs = (client_id, status) => {
         }
   
         queryStr += `
-          ORDER BY ST_Distance($1::geography, j.location::geography) ASC
+          ORDER BY ST_Distance(
+            (SELECT location FROM users WHERE user_id = $1)::geography,
+            j.location::geography
+          ) ASC
         `;
   
         console.log("QueryStr:", queryStr, queryParams);
@@ -124,4 +122,66 @@ exports.fetchClientJobs = (client_id, status) => {
         console.log("returned:", rows.length);
         return rows;
       });
+  };
+
+  const fetchProviderJobsWithBids = (provider_id, additionalSelect = '', whereConditions) => {
+    console.log(`Running fetchProviderJobsWithBids for provider_id: ${provider_id}`);
+  
+    return checkUserExists(provider_id, true)
+      .then(() => {
+        let queryStr = `
+          SELECT j.*,
+                 ROUND(
+                   (ST_Distance(
+                     (SELECT location FROM users WHERE user_id = $1)::geography,
+                     j.location::geography
+                   ) / 1609.34)::numeric,
+                   3
+                 )::double precision AS distance
+                 ${additionalSelect}
+          FROM jobs j
+          JOIN bids b ON j.job_id = b.job_id
+          WHERE b.provider_id = $1
+          ${whereConditions}
+          ORDER BY j.date_posted DESC
+        `;
+  
+        const queryParams = [provider_id];
+  
+        console.log("QueryStr:", queryStr, queryParams);
+  
+        return db.query(queryStr, queryParams);
+      })
+      .then(({ rows }) => {
+        console.log("returned:", rows.length);
+        return rows;
+      });
+  };
+  
+  exports.fetchProviderBids = (provider_id) => {
+    const additionalSelect = `,
+      CASE
+        WHEN j.status = 'open' THEN 'Waiting'
+        WHEN j.status IN ('accepted', 'completed') AND j.accepted_bid != b.bid_id THEN 'Lost'
+        ELSE 'Unknown'
+      END AS bid_status`;
+    const whereConditions = `
+      AND (
+        j.status = 'open'
+        OR (j.status IN ('accepted', 'completed') AND j.accepted_bid != b.bid_id)
+      )`;
+    return fetchProviderJobsWithBids(provider_id, additionalSelect, whereConditions);
+  };
+  
+  exports.fetchProviderWonJobs = (provider_id) => {
+    const additionalSelect = `,
+      CASE
+        WHEN j.status = 'accepted' THEN 'Pending'
+        WHEN j.status = 'completed' THEN 'Done'
+        ELSE 'Unknown'
+      END AS job_progress`;
+    const whereConditions = `
+      AND j.status IN ('accepted', 'completed')
+      AND j.accepted_bid = b.bid_id`;
+    return fetchProviderJobsWithBids(provider_id, additionalSelect, whereConditions);
   };

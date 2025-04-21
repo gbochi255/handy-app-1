@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const { loginUser, createUser } = require("./src/controllers/userController");
-const { getJobs, getClientJobs, getProviderJobs } = require("./src/controllers/jobController")
+const { getJobs, getClientJobs, getProviderJobs, getProviderBids, getProviderWonJobs } = require("./src/controllers/jobController")
 const { validateRegistration, validateLogin, handleDefaultErrors, handleDBErrors } = require("./src/middleware");
 const baseurl = "";
 
@@ -17,6 +17,10 @@ app.get(`${baseurl}/jobs`, getJobs)
 app.get(`${baseurl}/jobs/client`, getClientJobs)
 
 app.get(`${baseurl}/jobs/provider`, getProviderJobs)
+
+app.get(`${baseurl}/jobs/provider/:provider_id/bids`, getProviderBids)
+
+app.get(`${baseurl}/jobs/provider/:provider_id/won`, getProviderWonJobs)
 
 
 // handle invalid routes gracefully

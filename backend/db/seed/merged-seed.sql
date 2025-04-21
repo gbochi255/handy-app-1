@@ -72,7 +72,7 @@ VALUES
 -- Manchester Jobs (job_id 1–10, created_by 1–10, all open)
 (1, 'Fix kitchen sink', 'Leaking pipe under kitchen sink needs repair.', 'Plumbing', 1, 'open', NULL, '2025-04-15T10:00:00Z', '2025-04-25', NULL, 'https://example.com/photos/sink.jpg', ST_PointFromText('POINT(-2.2410 53.4740)', 4326)),
 (2, 'Mow lawn', 'Front and back lawn need mowing and trimming.', 'Gardening', 2, 'open', NULL, '2025-04-15T11:00:00Z', '2025-04-26', NULL, 'https://example.com/photos/lawn2.jpg', ST_PointFromText('POINT(-2.2435 53.4790)', 4326)),
-(3, 'Install light fixture', 'Replace old ceiling light with new fixture.', 'Electrical', 2, 'completed', NULL, '2025-04-15T12:00:00Z', '2025-04-27', NULL, 'https://example.com/photos/light.jpg', ST_PointFromText('POINT(-2.2480 53.4830)', 4326)),
+(3, 'Install light fixture', 'Replace old ceiling light with new fixture.', 'Electrical', 2, 'accepted', 5, '2025-04-15T12:00:00Z', '2025-04-27', NULL, 'https://example.com/photos/light.jpg', ST_PointFromText('POINT(-2.2480 53.4830)', 4326)),
 (4, 'Paint bedroom', 'Paint two walls and ceiling in small bedroom.', 'Painting', 4, 'open', NULL, '2025-04-15T13:00:00Z', '2025-04-28', NULL, 'https://example.com/photos/bedroom.jpg', ST_PointFromText('POINT(-2.2370 53.4750)', 4326)),
 (5, 'Assemble wardrobe', 'Flat-pack wardrobe needs assembly.', 'Assembly', 5, 'open', NULL, '2025-04-15T14:00:00Z', '2025-04-29', NULL, 'https://example.com/photos/wardrobe.jpg', ST_PointFromText('POINT(-2.2350 53.4810)', 4326)),
 (6, 'Repair garden fence', 'Two fence panels need replacing.', 'Carpentry', 6, 'open', NULL, '2025-04-15T15:00:00Z', '2025-04-30', NULL, 'https://example.com/photos/fence.jpg', ST_PointFromText('POINT(-2.2380 53.4910)', 4326)),
@@ -81,17 +81,17 @@ VALUES
 (9, 'Wall plastering', 'Plaster one wall in living room.', 'Plastering', 9, 'open', NULL, '2025-04-15T18:00:00Z', '2025-05-03', NULL, 'https://example.com/photos/plaster.jpg', ST_PointFromText('POINT(-2.2290 53.4840)', 4326)),
 (10, 'Mount TV on wall', 'Install TV bracket and mount 55-inch TV.', 'Assembly', 10, 'open', NULL, '2025-04-15T19:00:00Z', '2025-05-04', NULL, 'https://example.com/photos/tv.jpg', ST_PointFromText('POINT(-2.2320 53.4850)', 4326)),
 -- Original Test Jobs (job_id 11–15, created_by adjusted to 51–55)
-(11, 'Fix leaky tap', 'Bathroom tap is leaking and needs a washer replaced.', 'Plumbing', 51, 'open', NULL, '2025-04-12T10:00:00Z', '2025-04-18', NULL, 'https://example.com/photos/tap.jpg', ST_PointFromText('POINT(-0.0754 51.5202)', 4326)),
-(12, 'Lawn mowing service', 'Front and back garden need mowing.', 'Gardening', 52, 'open', NULL, '2025-04-12T11:00:00Z', '2025-04-19', NULL, 'https://example.com/photos/lawn.jpg', ST_PointFromText('POINT(-2.2416 53.4794)', 4326)),
-(13, 'Assemble IKEA furniture', 'Need help assembling wardrobe and desk.', 'Assembly', 53, 'in_progress', 5, '2025-04-12T12:00:00Z', '2025-04-21', NULL, 'https://example.com/photos/furniture.jpg', ST_PointFromText('POINT(-1.8998 52.4862)', 4326)),
-(14, 'Paint living room', 'One coat of paint for walls and ceiling.', 'Painting', 54, 'open', NULL, '2025-04-12T13:00:00Z', '2025-04-22', NULL, 'https://example.com/photos/paint.jpg', ST_PointFromText('POINT(-0.0631 51.5270)', 4326)),
-(15, 'Electric socket repair', 'Faulty socket needs fixing in kitchen.', 'Electrical', 55, 'open', NULL, '2025-04-12T14:00:00Z', '2025-04-24', NULL, 'https://example.com/photos/socket.jpg', ST_PointFromText('POINT(-1.5605 53.8098)', 4326)),
+(11, 'Fix leaky tap', 'Bathroom tap is leaking and needs a washer replaced.', 'Plumbing', 51, 'open', 52, '2025-04-12T10:00:00Z', '2025-04-18', NULL, 'https://example.com/photos/tap.jpg', ST_PointFromText('POINT(-0.0754 51.5202)', 4326)),
+(12, 'Lawn mowing service', 'Front and back garden need mowing.', 'Gardening', 52, 'accepted', 25, '2025-04-12T11:00:00Z', '2025-04-19', NULL, 'https://example.com/photos/lawn.jpg', ST_PointFromText('POINT(-2.2416 53.4794)', 4326)),
+(13, 'Assemble IKEA furniture', 'Need help assembling wardrobe and desk.', 'Assembly', 53, 'accepted', 26, '2025-04-12T12:00:00Z', '2025-04-21', NULL, 'https://example.com/photos/furniture.jpg', ST_PointFromText('POINT(-1.8998 52.4862)', 4326)),
+(14, 'Paint living room', 'One coat of paint for walls and ceiling.', 'Painting', 54, 'completed', 29, '2025-04-12T13:00:00Z', '2025-04-22', NULL, 'https://example.com/photos/paint.jpg', ST_PointFromText('POINT(-0.0631 51.5270)', 4326)),
+(15, 'Electric socket repair', 'Faulty socket needs fixing in kitchen.', 'Electrical', 55, 'completed', 30, '2025-04-12T14:00:00Z', '2025-04-24', NULL, 'https://example.com/photos/socket.jpg', ST_PointFromText('POINT(-1.5605 53.8098)', 4326)),
 -- New completed and Expired Jobs (job_id 16–20, created_by 11–15, in Manchester)
-(16, 'Replace broken window', 'Fix cracked window in living room.', 'Repairs', 11, 'completed', 1, '2025-04-01T09:00:00Z', '2025-04-10', '2025-04-09T15:00:00Z', 'https://example.com/photos/window.jpg', ST_PointFromText('POINT(-2.2100 53.4690)', 4326)),
-(17, 'Install new shelves', 'Mount three floating shelves in study.', 'Carpentry', 12, 'completed', 3, '2025-04-02T10:00:00Z', '2025-04-12', '2025-04-11T14:00:00Z', 'https://example.com/photos/shelves.jpg', ST_PointFromText('POINT(-2.2150 53.4770)', 4326)),
+(16, 'Replace broken window', 'Fix cracked window in living room.', 'Repairs', 11, 'completed', 33, '2025-04-01T09:00:00Z', '2025-04-10', '2025-04-09T15:00:00Z', 'https://example.com/photos/window.jpg', ST_PointFromText('POINT(-2.2100 53.4690)', 4326)),
+(17, 'Install new shelves', 'Mount three floating shelves in study.', 'Carpentry', 12, 'completed', 35, '2025-04-02T10:00:00Z', '2025-04-12', '2025-04-11T14:00:00Z', 'https://example.com/photos/shelves.jpg', ST_PointFromText('POINT(-2.2150 53.4770)', 4326)),
 (18, 'Clean gutters', 'Clear leaves and debris from house gutters.', 'Gardening', 13, 'expired', NULL, '2025-03-01T08:00:00Z', '2025-03-15', NULL, 'https://example.com/photos/gutters.jpg', ST_PointFromText('POINT(-2.2330 53.4790)', 4326)),
 (19, 'Repair roof leak', 'Fix leak in roof near chimney.', 'Repairs', 14, 'expired', NULL, '2025-03-05T09:00:00Z', '2025-03-20', NULL, 'https://example.com/photos/roof.jpg', ST_PointFromText('POINT(-2.2270 53.4660)', 4326)),
-(20, 'Rewire bedroom lights', 'Update wiring for bedroom ceiling lights.', 'Electrical', 15, 'completed', 2, '2025-04-03T11:00:00Z', '2025-04-15', '2025-04-14T16:00:00Z', 'https://example.com/photos/lights.jpg', ST_PointFromText('POINT(-2.2340 53.4830)', 4326));
+(20, 'Rewire bedroom lights', 'Update wiring for bedroom ceiling lights.', 'Electrical', 15, 'completed', 41, '2025-04-03T11:00:00Z', '2025-04-15', '2025-04-14T16:00:00Z', 'https://example.com/photos/lights.jpg', ST_PointFromText('POINT(-2.2340 53.4830)', 4326));
 
 -- Insert Bids (from original test + new bids for Manchester jobs + bids for completed/expired jobs, adjusted job_id and provider_id)
 INSERT INTO bids (bid_id, job_id, amount, provider_id, status, created_at)
@@ -101,7 +101,7 @@ VALUES
 (2, 1, 45.00, 47, 'pending', '2025-04-16T11:00:00Z'), -- Wade (handyman) on Fix kitchen sink
 (3, 2, 30.00, 42, 'pending', '2025-04-16T12:00:00Z'), -- Rachel (gardener) on Mow lawn
 (4, 2, 35.00, 48, 'pending', '2025-04-16T13:00:00Z'), -- Xander (gardener) on Mow lawn
-(5, 3, 70.00, 43, 'pending', '2025-04-16T14:00:00Z'), -- Sam (electrician) on Install light fixture
+(5, 3, 70.00, 43, 'accepted', '2025-04-16T14:00:00Z'), -- Sam (electrician) on Install light fixture
 (6, 3, 65.00, 49, 'pending', '2025-04-16T15:00:00Z'), -- Yara (electrician) on Install light fixture
 (7, 4, 100.00, 44, 'pending', '2025-04-16T16:00:00Z'), -- Tara (painter) on Paint bedroom
 (8, 4, 90.00, 50, 'pending', '2025-04-16T17:00:00Z'), -- Zach (painter) on Paint bedroom
