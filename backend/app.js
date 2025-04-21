@@ -3,6 +3,7 @@ const app = express();
 const { loginUser, createUser } = require("./src/controllers/userController");
 const { getJobs, getClientJobs, getProviderJobs, getProviderBids, getProviderWonJobs } = require("./src/controllers/jobController")
 const { validateRegistration, validateLogin, handleDefaultErrors, handleDBErrors } = require("./src/middleware");
+const { patchJobComplete } = require("./src/controllers/patchController")
 const baseurl = "";
 
 app.use(express.json());
@@ -21,6 +22,8 @@ app.get(`${baseurl}/jobs/provider`, getProviderJobs)
 app.get(`${baseurl}/jobs/provider/:provider_id/bids`, getProviderBids)
 
 app.get(`${baseurl}/jobs/provider/:provider_id/won`, getProviderWonJobs)
+
+app.patch(`${baseurl}/jobs/:job_id/complete`, patchJobComplete)
 
 
 // handle invalid routes gracefully
