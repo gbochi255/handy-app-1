@@ -420,3 +420,36 @@ describe("GET /jobs/provider", () => {
             });
       });
     });
+describe.only("POST /jobs", ()=>{
+  test("200: Successfully add a job", ()=>{
+    return supertest(app)
+    .post("/jobs/create")
+    .send({
+      "created_by": 1,
+      "summary": "My new task",
+      "job_detail": "Details about my new task",
+      "category": "Plumbing",
+      "target_date": "2025-04-30",
+      "photo_url": "https://supabase.co/storage/v1/object/public/jobs/tap.jpg",
+      "postcode": "E1 6AN"
+    })
+    .expect(200)
+    .then(response=>{
+      const job=response.body
+      console.log("test:", job)
+      expect(job).toHaveProperty("job_id");
+      expect(job.status).toBe("open")
+      expect(job.accepted_bid).toBe(null);
+      expect(job).toHaveProperty("date_posted")
+      expect(job).toHaveProperty("location")
+      expect(job.created_by).toBe(1)
+      expect(job.summary).toBe("My new task")
+      expect(job.job_detail).toBe("Details about my new task")
+      expect(job.category).toBe("Plumbing")
+      expect(job.target_date).toBe("2025-04-30")
+      expect(job.photo_url).toBe("https://supabase.co/storage/v1/object/public/jobs/tap.jpg")
+    })
+
+  })
+
+})
