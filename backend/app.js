@@ -1,9 +1,8 @@
 const express = require("express");
 const app = express();
-const { loginUser, createUser } = require("./src/controllers/userController");
-const { getJobs, getClientJobs, getProviderJobs, getProviderBids, getProviderWonJobs, postJob, createJob } = require("./src/controllers/jobController")
+const { loginUser, createUser, patchProviderStatus } = require("./src/controllers/userController");
+const { getJobs, getClientJobs, getProviderJobs, getProviderBids, getProviderWonJobs, postJob, createJob, patchJobComplete, patchBidAccept } = require("./src/controllers/jobController")
 const { validateRegistration, validateLogin, handleDefaultErrors, handleDBErrors } = require("./src/middleware");
-const { patchJobComplete, patchBidAccept, patchProviderStatus } = require("./src/controllers/patchController")
 const baseurl = "";
 
 app.use(express.json());
