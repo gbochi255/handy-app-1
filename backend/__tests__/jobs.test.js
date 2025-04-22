@@ -409,7 +409,7 @@ describe("GET /jobs/provider/provider_id", () => {
             });
       });
     });
-describe("POST /jobs", ()=>{
+describe.only("POST /jobs", ()=>{
   test("200: Successfully add a job", ()=>{
     return supertest(app)
     .post("/jobs/create")
@@ -435,6 +435,7 @@ describe("POST /jobs", ()=>{
       expect(job.job_detail).toBe("Details about my new task")
       expect(job.category).toBe("Plumbing")
       expect(job.target_date).toBe("2025-04-30")
+      expect(job.location_wkt).toBe('POINT(-2.241 53.474)');
       expect(job.photo_url).toBe("https://supabase.co/storage/v1/object/public/jobs/tap.jpg")
     })
 
@@ -451,8 +452,28 @@ describe("POST /jobs", ()=>{
       expect(body.status).toBe(400)
       expect(body.message).toBe("Required paramaters missing from body")
       })  
+  })
 
-})
+  test("404: user_id not found or location not set",() =>{
+    return supertest(app)
+    .post("/jobs/create")
+    .send({
+      "created_by": 9999,
+      "summary": "No such user",
+      "job_detail": "Details about my new task",
+      "category": "Plumbing",
+      "target_date": "2025-04-30",
+      "photo_url": "https://supabase.co/storage/v1/object/public/jobs/tap.jpg",
+      "postcode": "E1 6AN"
+    })
+    .expect(404)
+    .then(response=>{
+      body=response.body
+      expect(body.status).toBe(404)
+      expect(body.message).toBe("User not found or no location set")
+      })  
+  })
+
 })
 describe("PATCH: /jobs/:job_id/complete", () => {
   test("200: Respond with updated job object", () => {
