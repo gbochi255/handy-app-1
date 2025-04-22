@@ -57,8 +57,6 @@ exports.fetchClientJobs = (client_id, status) => {
           ORDER BY j.date_posted DESC
         `;
   
-        console.log("QueryStr:", queryStr, queryParams);
-  
         return db.query(queryStr, [...queryParams]);
       })
       .then(({ rows }) => {
@@ -110,8 +108,6 @@ exports.fetchClientJobs = (client_id, status) => {
           ) ASC
         `;
   
-        console.log("QueryStr:", queryStr, queryParams);
-  
         return db.query(queryStr, queryParams);
       })
       .then(({ rows }) => {
@@ -143,9 +139,7 @@ exports.fetchClientJobs = (client_id, status) => {
         `;
   
         const queryParams = [provider_id];
-  
-        console.log("QueryStr:", queryStr, queryParams);
-  
+
         return db.query(queryStr, queryParams);
       })
       .then(({ rows }) => {
@@ -185,11 +179,8 @@ exports.fetchClientJobs = (client_id, status) => {
 
   exports.postJob = (jobData) => {
     console.log("Running postJob")
-    console.log("Job:", jobData)
     const queryParams=[jobData.summary, jobData.job_detail, jobData.category, jobData.created_by, jobData.photo_url, jobData.target_date, jobData.location]
     
-    console.log("queryparams:",queryParams)
-
     const queryStr=`
     INSERT INTO jobs (
       summary, job_detail, category, created_by, photo_url, target_date, location) 
@@ -199,8 +190,6 @@ exports.fetchClientJobs = (client_id, status) => {
 
     return db.query(queryStr, queryParams)
     .then(({ rows }) => {
-      console.log("returned:", rows);
-
         return rows[0];
         })
 

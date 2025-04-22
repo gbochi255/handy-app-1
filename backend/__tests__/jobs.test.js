@@ -425,7 +425,6 @@ describe("POST /jobs", ()=>{
     .expect(200)
     .then(response=>{
       const job=response.body
-      console.log("test:", job)
       expect(job).toHaveProperty("job_id");
       expect(job.status).toBe("open")
       expect(job.accepted_bid).toBe(null);
@@ -440,5 +439,18 @@ describe("POST /jobs", ()=>{
     })
 
   })
+  test("400: Required fields missing from request body",() =>{
+    return supertest(app)
+    .post("/jobs/create")
+    .send({
+      "missing_required_fields": 1,
+    })
+    .expect(400)
+    .then(response=>{
+      body=response.body
+      expect(body.status).toBe(400)
+      expect(body.message).toBe("Required paramaters missing from body")
+      })  
 
+})
 })
