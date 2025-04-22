@@ -294,7 +294,7 @@ exports.insertBid = (bidData) => {
   const {job_id, amount, provider_id} = bidData
 
   if (!job_id || !amount || !provider_id) {
-    return Promise.reject({status: 400, message: "Missing required fields: amount, provider_id"})
+    return Promise.reject({status: 400, message: "Missing required parameters {amount:, provider_id:}"})
   }
 
   const queryStr=`INSERT INTO bids (job_id, amount, provider_id)

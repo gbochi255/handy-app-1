@@ -591,7 +591,7 @@ describe("GET /jobs/:job_id", ()=>{
 
 
 describe.only("POST /jobs/:job_id/bid", ()=>{
-  test("200: bid on a job", ()=>{
+  test("200: Creates a bid and returns it", ()=>{
     return supertest(app)
     .post("/jobs/2/bid")
     .send({
@@ -608,6 +608,37 @@ describe.only("POST /jobs/:job_id/bid", ()=>{
       expect(bid.provider_id).toBe(42)
       expect(bid.amount).toBe(45.00)
       expect(bid.status).toBe("pending")
+    })
+  })
+  test("400: Inavlid body parameters", ()=>{
+    return supertest(app)
+    .post("/jobs/2/bid")
+    .send({
+      "not_a_user": 42,
+      "money": 45.00
+    })
+    .expect(400)
+    .then(response => {
+      const error=response.body
+      console.log(error)
+      expect(error.status).toBe(400)
+      expect(error.message).toBe("Missing required parameters {amount:, provider_id:}")
+    })
+  })
+  test("404: Non-existant job_id", ()=>{
+    return supertest(app)
+    .post("/jobs/9999/bid")
+    .send({
+      "provider_id": 42,
+      "amount": 45.00
+    })
+    .expect(404)
+    .then(response => {
+      const bid=response.body
+      const error=response.body
+      console.log(error)
+      expect(error.status).toBe(404)
+      expect(error.message).toBe("Not found")
     })
   })
 })
