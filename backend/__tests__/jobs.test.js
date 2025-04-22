@@ -558,7 +558,7 @@ describe("PATCH: /jobs/:job_id/accept/:bid_id", () => {
   })
 })
 
-describe.only("GET /jobs/:job_id", ()=>{
+describe("GET /jobs/:job_id", ()=>{
   test("200: return all details for a specific job", ()=>{
     return supertest(app)
     .get("/jobs/1")
@@ -587,4 +587,27 @@ describe.only("GET /jobs/:job_id", ()=>{
       expect(error.message).toBe("Job_id not found")
     })
   } )
+})
+
+
+describe.only("POST /jobs/:job_id/bid", ()=>{
+  test("200: bid on a job", ()=>{
+    return supertest(app)
+    .post("/jobs/2/bid")
+    .send({
+      "provider_id": 42,
+      "amount": 45.00
+    })
+    .expect(200)
+    .then(response => {
+      const bid=response.body
+      console.log(bid)
+      expect(bid).toHaveProperty("bid_id")
+      expect(bid).toHaveProperty("created_at")
+      expect(bid.job_id).toBe(2)
+      expect(bid.provider_id).toBe(42)
+      expect(bid.amount).toBe(45.00)
+      expect(bid.status).toBe("pending")
+    })
+  })
 })
