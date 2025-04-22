@@ -10,7 +10,6 @@ const config = {
 
 // Override DATE type parser (OID 1082)
 types.setTypeParser(1082, (value) => value); // Return raw string (YYYY-MM-DD)
-const db = new Pool(config);
 
 const PORT = process.env.PORT || 3000;
 
@@ -26,5 +25,6 @@ if (ENV === "production") {
 }
 
 
+const db = new Pool(config);
 module.exports = db
 
