@@ -1,20 +1,38 @@
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import Navbar from "./Navbar";
+import testJobData from "../assets/testJobData";
+import JobItem from "./JobItem";
 import Header from "./Header";
 
 export default function ProviderHomepage() {
-  const navigation = useNavigation();
-  const [selected, setSelected] = useState("available");
-  const options = ["available", "my jobs", "my bids"];
-
-  function handleGetJobs() {}
-
   return (
     <View style={styles.appContainer}>
       <Header />
-      <Navbar />
+
+      <View style={styles.contentContainer}>
+        <FlatList
+          data={testJobData}
+          renderItem={({ item }) => (
+            <JobItem
+              summary={item.summary}
+              job_detail={item.job_detail}
+              created_by={item.created_by}
+              status={item.status}
+              photo_url={item.photo_url}
+              target_date={item.target_date}
+              location={item.location}
+            />
+          )}
+          keyExtractor={(item) => item.job_id}
+        />
+      </View>
     </View>
   );
 }

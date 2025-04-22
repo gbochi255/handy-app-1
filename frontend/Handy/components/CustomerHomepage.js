@@ -4,51 +4,90 @@ import {
   View,
   FlatList,
   TouchableOpacity,
+  Button,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import testJobData from "../assets/testJobData";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-import JobItem from "./JobItem";
-import Navbar from "./Navbar";
 import Header from "./Header";
+import { useContext } from "react";
+import { UserContext } from "./UserContext";
+import { useEffect, useState } from "react";
+import testJobData from "../assets/testJobData";
+import JobItem from "./JobItem";
 
 export default function CustomerHomepage() {
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
+  const { userData } = useContext(UserContext);
+  const loggedIn = userData.isProvider;
 
-  function renderList({ item }) {
-    return <Text>a</Text>;
-  }
+  // useEffect(() => {
+  //   fetch("OUR END POINT/jobs")
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setJobs(data);
+  //       setLoading(false);
+  //     })
+  //     .catch((err) => {
+  //       console.error("Failed to fetch jobs:", err);
+  //       setLoading(false);
+  //     });
+  // }, []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header />
-      <Navbar />
-
-      {/* main section */}
-
-      {/* <Text style={{ fontSize: 20 }}>My Jobs</Text> */}
-
-      {/* <View style={styles.addJobButton}>
-          <Button
-            title="Add Job"
-            onPress={() => navigation.navigate("PostJob")}
-          ></Button>
-        </View> */}
+      {/* <Navbar /> */}
+      {loggedIn ? (
+        <View style={styles.navbarButtonContainer}>
+          <View style={styles.providerButton}>
+            <Button
+              title="Handy Admin"
+              onPress={() => navigation.navigate("ProviderHomepage")}
+            />
+          </View>
+        </View>
+      ) : null}
 
       <View style={styles.contentContainer}>
         <FlatList
           data={testJobData}
           renderItem={({ item }) => (
             <JobItem
-              image_title={item.image_title}
-              job_title={item.job_title}
-              posted_date={item.posted_date}
-              job_id={item.job_id}
-              distance={item.distance}
+              summary={item.summary}
+              job_detail={item.job_detail}
+              created_by={item.created_by}
+              status={item.status}
+              photo_url={item.photo_url}
+              target_date={item.target_date}
+              location={item.location}
             />
           )}
           keyExtractor={(item) => item.job_id}
         />
+
+        {/* <View style={styles.contentContainer}>
+          {loading ? (
+            <Text>Loading jobs...</Text>
+          ) : (
+            <FlatList
+              data={jobs}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <JobItem
+                  summary={item.summary}
+                  job_detail={item.job_detail}
+                  created_by={item.created_by}
+                  status={item.status}
+                  photo_url={item.photo_url}
+                  target_date={item.target_date}
+                  location={item.location}
+                />
+              )}
+            />
+          )}
+        </View> */}
       </View>
 
       <TouchableOpacity
@@ -93,5 +132,21 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  navbarButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    margin: 20,
+    marginBottom: 0,
+    marginLeft: 60,
+    marginRight: 60,
+    borderColor: "rgb(0, 0, 0)",
+    borderWidth: 2,
+  },
+  providerButton: {
+    flex: 1,
+    borderColor: "rgb(0, 0, 0)",
+    borderWidth: 1,
+    backgroundColor: "#FF7A00",
   },
 });
