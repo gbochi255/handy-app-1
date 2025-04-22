@@ -179,20 +179,35 @@ exports.fetchClientJobs = (client_id, status) => {
 
   exports.postJob = (jobData) => {
     console.log("Running postJob")
-    const queryParams=[jobData.summary, jobData.job_detail, jobData.category, jobData.created_by, jobData.photo_url, jobData.target_date, jobData.location]
+    const queryParams=[
+      jobData.summary, 
+      jobData.job_detail, 
+      jobData.category, 
+      jobData.created_by, 
+      jobData.photo_url, 
+      jobData.target_date, 
+    ]
     
     const queryStr=`
     INSERT INTO jobs (
-      summary, job_detail, category, created_by, photo_url, target_date, location) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7) 
-    RETURNING *
-      `
+      summary, job_detail, category, created_by, photo_url, target_date, location
+    )
+    SELECT $1, $2, $3, $4, $5, $6, location
+    FROM users
+    WHERE user_id = $4
+    RETURNING *, ST_AsText(location) AS location_wkt;
+  `;
 
     return db.query(queryStr, queryParams)
     .then(({ rows }) => {
-        return rows[0];
-        })
-
+      if (rows.length === 0) {
+        return Promise.reject({
+          status: 404,
+          message: "User not found or no location set",
+        });
+      }
+      return rows[0];
+    })
   }
 
   exports.updateJobComplete = (job_id) => {
