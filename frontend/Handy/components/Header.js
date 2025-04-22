@@ -6,12 +6,14 @@ import { useNavigation } from "@react-navigation/native";
 export default function Header() {
   const navigation = useNavigation();
   const { userData, setUserData } = useContext(UserContext);
+
   const defaultImage = (
     <Image
       source={require("../assets/profileicon.jpg")}
       style={styles.profileIcon}
     />
   );
+
   const profileImage = (
     <Image
       source={require("../assets/defaultProfile.png")}
@@ -19,9 +21,27 @@ export default function Header() {
     />
   );
 
+  const handleLogoPress = () => {
+    setUserData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      postcode: "",
+      region: "",
+      long: "",
+      lat: "",
+      bio: "",
+      photoUrl: "",
+      isProvider: false,
+      token: false,
+    });
+    navigation.navigate("SignIn");
+  };
+
   return (
     <View style={styles.headerContainer}>
-      <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
+      <TouchableOpacity onPress={handleLogoPress}>
         <Image source={require("../assets/logo.jpg")} style={styles.logo} />
       </TouchableOpacity>
 

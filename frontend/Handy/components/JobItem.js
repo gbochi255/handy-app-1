@@ -10,29 +10,39 @@ import { Card } from "react-native-paper";
 //   job_id,
 // }
 
-export default function JobItem(props) {
+export default function JobItem({
+  job_id,
+  summary,
+  job_detail,
+  created_by,
+  status,
+  photo_url,
+  target_date,
+  location,
+}) {
   const navigation = useNavigation();
 
   return (
     <Card
       style={styles.card}
-      onPress={() => navigation.navigate("JobPage", props)}
+      onPress={() => navigation.navigate("JobPage")}
+      job_id={job_id}
     >
       <Card.Content>
         <View style={styles.row}>
           <Image
             source={{
-              uri: `https://picsum.photos/seed/${props.job_id}/200/200`,
+              uri: photo_url || `https://picsum.photos/seed/1/200/200`,
             }}
             style={styles.image}
           />
           <View style={styles.middleContent}>
-            <Text style={styles.jobTitle}>{props.job_title}</Text>
-            <Text style={styles.postedDate}>{props.posted_date}</Text>
+            <Text style={styles.jobTitle}>{summary}</Text>
+            <Text style={styles.postedDate}>{target_date}</Text>
           </View>
           <View style={styles.rightContent}>
-            <Text style={styles.distanceLabel}>Distance</Text>
-            <Text style={styles.distanceValue}>{props.distance} miles</Text>
+            <Text style={styles.distanceLabel}>Location</Text>
+            <Text style={styles.distanceValue}>{location}</Text>
           </View>
         </View>
       </Card.Content>
