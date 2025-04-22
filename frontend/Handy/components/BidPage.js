@@ -1,12 +1,8 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 
-
-//import chat screens
-
-
-import Login from "../components/Chat/Login.js"
-import Chat from "../components/Chat/Chat.js"
+import Login from "../components/Chat/Login.js";
+import Chat from "../components/Chat/Chat.js";
 
 // { route: { params }, jobDetes }
 
@@ -36,12 +32,7 @@ export default function BidPage({ route: { params } }) {
       <SafeAreaView>
         <Login />
         <Chat />
-           
       </SafeAreaView>
-
-
-
-
     </View>
   );
 }
@@ -84,7 +75,7 @@ const styles = StyleSheet.create({
     margin: 5,
   },
 
-//chat styling
+  //chat styling
 
   loginscreen: {
     flex: 1,
@@ -93,47 +84,47 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 12,
     width: "100%",
-},
-loginheading: {
+  },
+  loginheading: {
     fontSize: 26,
     marginBottom: 10,
-},
-logininputContainer: {
+  },
+  logininputContainer: {
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
-},
-logininput: {
+  },
+  logininput: {
     borderWidth: 1,
     width: "90%",
     padding: 8,
     borderRadius: 2,
-},
-loginbutton: {
+  },
+  loginbutton: {
     backgroundColor: "green",
     padding: 12,
     marginVertical: 10,
     width: "60%",
     borderRadius: "50%",
     elevation: 1,
-},
-loginbuttonText: {
+  },
+  loginbuttonText: {
     textAlign: "center",
     color: "#fff",
     fontWeight: "600",
-},
-chatscreen: {
+  },
+  chatscreen: {
     backgroundColor: "#F7F7F7",
     flex: 1,
     padding: 10,
     position: "relative",
-},
-chatheading: {
+  },
+  chatheading: {
     fontSize: 24,
     fontWeight: "bold",
     color: "green",
-},
-chattopContainer: {
+  },
+  chattopContainer: {
     backgroundColor: "#F7F7F7",
     height: 70,
     width: "100%",
@@ -141,26 +132,26 @@ chattopContainer: {
     justifyContent: "center",
     marginBottom: 15,
     elevation: 2,
-},
-chatheader: {
+  },
+  chatheader: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-},
-chatlistContainer: {
+  },
+  chatlistContainer: {
     paddingHorizontal: 10,
-},
-chatemptyContainer: {
+  },
+  chatemptyContainer: {
     width: "100%",
     height: "80%",
     alignItems: "center",
     justifyContent: "center",
-},
-chatemptyText: { fontWeight: "bold", fontSize: 24, paddingBottom: 30 },
-messagingscreen: {
+  },
+  chatemptyText: { fontWeight: "bold", fontSize: 24, paddingBottom: 30 },
+  messagingscreen: {
     flex: 1,
-},
-messaginginputContainer: {
+  },
+  messaginginputContainer: {
     width: "100%",
     minHeight: 100,
     backgroundColor: "white",
@@ -168,23 +159,23 @@ messaginginputContainer: {
     paddingHorizontal: 15,
     justifyContent: "center",
     flexDirection: "row",
-},
-messaginginput: {
+  },
+  messaginginput: {
     borderWidth: 1,
     padding: 15,
     flex: 1,
     marginRight: 10,
     borderRadius: 20,
-},
-messagingbuttonContainer: {
+  },
+  messagingbuttonContainer: {
     width: "30%",
     backgroundColor: "green",
     borderRadius: 3,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 50,
-},
-modalbutton: {
+  },
+  modalbutton: {
     width: "40%",
     height: 45,
     backgroundColor: "green",
@@ -192,16 +183,16 @@ modalbutton: {
     alignItems: "center",
     justifyContent: "center",
     color: "#fff",
-},
-modalbuttonContainer: {
+  },
+  modalbuttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 10,
-},
-modaltext: {
+  },
+  modaltext: {
     color: "#fff",
-},
-modalContainer: {
+  },
+  modalContainer: {
     width: "100%",
     borderTopColor: "#ddd",
     borderTopWidth: 1,
@@ -213,33 +204,33 @@ modalContainer: {
     zIndex: 10,
     paddingVertical: 50,
     paddingHorizontal: 20,
-},
-modalinput: {
+  },
+  modalinput: {
     borderWidth: 2,
     padding: 15,
-},
-modalsubheading: {
+  },
+  modalsubheading: {
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 15,
     textAlign: "center",
-},
-mmessageWrapper: {
+  },
+  mmessageWrapper: {
     width: "100%",
     alignItems: "flex-start",
     marginBottom: 15,
-},
-mmessage: {
+  },
+  mmessage: {
     maxWidth: "50%",
     backgroundColor: "#f5ccc2",
     padding: 15,
     borderRadius: 10,
     marginBottom: 2,
-},
-mvatar: {
+  },
+  mvatar: {
     marginRight: 5,
-},
-cchat: {
+  },
+  cchat: {
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
@@ -248,25 +239,25 @@ cchat: {
     backgroundColor: "#fff",
     height: 80,
     marginBottom: 10,
-},
-cavatar: {
+  },
+  cavatar: {
     marginRight: 15,
-},
-cusername: {
+  },
+  cusername: {
     fontSize: 18,
     marginBottom: 5,
     fontWeight: "bold",
-},
-cmessage: {
+  },
+  cmessage: {
     fontSize: 14,
     opacity: 0.7,
-},
-crightContainer: {
+  },
+  crightContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     flex: 1,
-},
-ctime: {
+  },
+  ctime: {
     opacity: 0.5,
-},
+  },
 });
