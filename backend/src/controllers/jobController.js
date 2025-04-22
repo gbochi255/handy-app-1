@@ -133,3 +133,13 @@ exports.patchBidAccept = (request, response, next) => {
     })
     .catch(next)
 }
+
+exports.getJobByID = (request, response, next) => {
+  const {job_id} = request.params
+  console.log("running getJobByID, ID:", job_id)
+  jobModel.fetchJobByID(Number(job_id)).then((jobDetail)=>{
+    response.status(200).send(jobDetail)
+  })
+  .catch(next)
+
+}

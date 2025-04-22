@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const { loginUser, createUser, patchProviderStatus } = require("./src/controllers/userController");
-const { getJobs, getClientJobs, getProviderJobs, getProviderBids, getProviderWonJobs, postJob, createJob, patchJobComplete, patchBidAccept } = require("./src/controllers/jobController")
+const { getJobs, getClientJobs, getProviderJobs, getProviderBids, getProviderWonJobs, postJob, createJob, patchJobComplete, patchBidAccept, getJobByID } = require("./src/controllers/jobController")
 const { validateRegistration, validateLogin, handleDefaultErrors, handleDBErrors } = require("./src/middleware");
 const baseurl = "";
 
@@ -13,6 +13,8 @@ app.post(`${baseurl}/register`, validateRegistration, createUser);
 app.post(`${baseurl}/login`, validateLogin, loginUser);
 
 app.get(`${baseurl}/jobs`, getJobs)
+
+app.get(`${baseurl}/jobs/:job_id`, getJobByID)
 
 app.get(`${baseurl}/jobs/client`, getClientJobs)
 

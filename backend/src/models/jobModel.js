@@ -265,3 +265,26 @@ exports.updateBidAccept = (job_id, bid_id) => {
             return rows;
         })
 }
+
+
+exports.fetchJobByID = (job_id) => {
+  console.log("Running fetchJobByID, jobID:", job_id)
+
+  let queryStr = `
+  SELECT *, ST_AsText(location) AS location_wkt
+  FROM jobs
+  WHERE job_id = $1;
+`;
+
+  return db.query(queryStr, [job_id]).then(({rows})=>{
+    if (rows.length === 0) {
+      return Promise.reject({
+        status: 404,
+        message: "Job_id not found",
+      });
+    }
+
+    return rows[0]
+  })
+
+}

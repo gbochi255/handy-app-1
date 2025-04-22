@@ -409,7 +409,7 @@ describe("GET /jobs/provider/provider_id", () => {
             });
       });
     });
-describe.only("POST /jobs", ()=>{
+describe("POST /jobs", ()=>{
   test("200: Successfully add a job", ()=>{
     return supertest(app)
     .post("/jobs/create")
@@ -556,4 +556,35 @@ describe("PATCH: /jobs/:job_id/accept/:bid_id", () => {
           expect(body.message).toBe("Bid Not found")
       })
   })
+})
+
+describe.only("GET /jobs/:job_id", ()=>{
+  test("200: return all details for a specific job", ()=>{
+    return supertest(app)
+    .get("/jobs/1")
+    .expect(200)
+    .then(response => {
+      const job = response.body
+      console.log(job)
+      expect(job.job_id).toBe(1)
+      expect(job.summary).toBe("Fix kitchen sink")
+      expect(job.job_detail).toBe("Leaking pipe under kitchen sink needs repair.")
+      expect(job.category).toBe("Plumbing")
+      expect(job.created_by).toBe(1)
+      expect(job.status).toBe("open")
+      expect(job.target_date).toBe("2025-04-25")
+      expect(job.photo_url).toBe("https://example.com/photos/sink.jpg")
+      expect(job.location_wkt).toBe("POINT(-2.241 53.474)")
+    })
+  } )
+  test("404: job not found", ()=>{
+    return supertest(app)
+    .get("/jobs/9999")
+    .expect(404)
+    .then(response => {
+      const error = response.body
+      expect(error.status).toBe(404)
+      expect(error.message).toBe("Job_id not found")
+    })
+  } )
 })
