@@ -10,12 +10,6 @@ exports.createUser = (request, response, next) => {
     .catch(next);
 };
 
-// Login
-// connect to /login
-// send email and password body
-// compare password against db
-// if match, return {user_id, firstname, lastname, email, is_provider, avatar_url}
-// if no match, return 401
 
 exports.loginUser = (request, response, next) => {
   const loginUser = request.body;

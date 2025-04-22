@@ -3,10 +3,6 @@ const { checkUserExists } = require("../utils/validation");
 
 exports.fetchJobs = ( created_by, status ) => {
 
-    // let queryStr = `SELECT * FROM jobs j
-    // WHERE ($1::job_status IS NULL OR j.status = $1)
-    // AND ($2::integer IS NULL OR j.created_by = $2);`
-
     let queryStr = `SELECT * FROM jobs j
     WHERE ($1::job_status IS NULL OR j.status = $1)
     AND ($2::integer IS NULL OR j.created_by = $2);`
@@ -61,8 +57,6 @@ exports.fetchClientJobs = (client_id, status) => {
           ORDER BY j.date_posted DESC
         `;
   
-        console.log("QueryStr:", queryStr, queryParams);
-  
         return db.query(queryStr, [...queryParams]);
       })
       .then(({ rows }) => {
@@ -114,8 +108,6 @@ exports.fetchClientJobs = (client_id, status) => {
           ) ASC
         `;
   
-        console.log("QueryStr:", queryStr, queryParams);
-  
         return db.query(queryStr, queryParams);
       })
       .then(({ rows }) => {
@@ -147,9 +139,7 @@ exports.fetchClientJobs = (client_id, status) => {
         `;
   
         const queryParams = [provider_id];
-  
-        console.log("QueryStr:", queryStr, queryParams);
-  
+
         return db.query(queryStr, queryParams);
       })
       .then(({ rows }) => {
@@ -185,3 +175,22 @@ exports.fetchClientJobs = (client_id, status) => {
       AND j.accepted_bid = b.bid_id`;
     return fetchProviderJobsWithBids(provider_id, additionalSelect, whereConditions);
   };
+
+
+  exports.postJob = (jobData) => {
+    console.log("Running postJob")
+    const queryParams=[jobData.summary, jobData.job_detail, jobData.category, jobData.created_by, jobData.photo_url, jobData.target_date, jobData.location]
+    
+    const queryStr=`
+    INSERT INTO jobs (
+      summary, job_detail, category, created_by, photo_url, target_date, location) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7) 
+    RETURNING *
+      `
+
+    return db.query(queryStr, queryParams)
+    .then(({ rows }) => {
+        return rows[0];
+        })
+
+  }

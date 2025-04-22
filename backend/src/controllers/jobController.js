@@ -1,6 +1,7 @@
 const { promises } = require("supertest/lib/test");
 const { fetchJobs, fetchClientJobs, fetchProviderJobs } = require("../models/jobModel")
-const jobModel = require("../models/jobModel")
+const jobModel = require("../models/jobModel");
+const { request, response } = require("express");
 
 exports.getJobs = (request, response, next) => {
 
@@ -31,7 +32,8 @@ exports.getClientJobs = (request, response, next) => {
 exports.getProviderJobs = (request, response, next) => {
     console.log("Running getProviderJobs");
   
-    const { user_id, distance, status } = request.query;
+    const { distance, status } = request.query;
+    const {provider_id: user_id} = request.params
     console.log("user_id:", user_id);
     console.log("distance:", distance);
     console.log("status:", status);
@@ -86,14 +88,29 @@ exports.getProviderJobs = (request, response, next) => {
   
   exports.getProviderWonJobs = (request, response, next) => {
     console.log("Running getProviderWonJobs");
-  
+    
     const { provider_id } = request.params;
     console.log("provider_id:", provider_id);
-  
+    
     jobModel
-      .fetchProviderWonJobs(provider_id)
-      .then(jobs => {
-        response.status(200).send({ jobs });
-      })
-      .catch(next);
+    .fetchProviderWonJobs(provider_id)
+    .then(jobs => {
+      response.status(200).send({ jobs });
+    })
+    .catch(next);
   };
+  
+  exports.createJob = (request, response, next) => {
+    console.log("Running postJob");
+    const job=request.body
+
+    // check for required fields 
+    if (!job.summary||!job.job_detail||!job.category||!job.created_by||!job.photo_url||!job.postcode) {
+      return Promise.reject({status: 400, message:"Required paramaters missing from body"})
+    }
+
+    jobModel.postJob (job).then(job => {
+      response.status(200).send(job)
+    })
+    .catch(next)
+  }
