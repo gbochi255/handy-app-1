@@ -1,7 +1,5 @@
-const { promises } = require("supertest/lib/test");
 const { fetchJobs, fetchClientJobs, fetchProviderJobs, updateJobComplete, updateBidAccept } = require("../models/jobModel")
 const jobModel = require("../models/jobModel");
-const { request, response } = require("express");
 
 exports.getJobs = (request, response, next) => {
 
