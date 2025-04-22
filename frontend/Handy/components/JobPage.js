@@ -1,18 +1,17 @@
 import { StyleSheet, Text, View, Image, FlatList } from "react-native";
-import testBidData from "../assets/testBidData";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import testBidData from "../assets/testBidData";
 import BidItem from "./BidItem";
 
-export default function JobPage({ route: { params } }) {
-  const jobDetails = params;
+export default function JobPage({ job_id }) {
   return (
     <View>
       <View style={styles.jobMetaData}>
         <Image></Image>
         <View style={styles.jobInfo}>
-          <Text>Job:{params.job_title}</Text>
-          <Text>Image:{params.image_title}</Text>
-          <Text>Posted_date:{params.posted_date}</Text>
+          <Text>Job:</Text>
+          <Text>Image:</Text>
+          <Text>Posted_date:</Text>
         </View>
       </View>
       <View>
@@ -26,11 +25,18 @@ export default function JobPage({ route: { params } }) {
       <View style={styles.container}>
         <SafeAreaView>
           <FlatList
-            data={testBidData}
+            data={testBidData} // an array of bid objects
+            keyExtractor={(item) => item.bid_id.toString()}
             renderItem={({ item }) => (
-              <BidItem bidItem={item} jobDetes={jobDetails} />
+              <BidItem
+                bid_id={item.bid_id}
+                job_id={item.job_id}
+                amount={item.amount}
+                provider_id={item.provider_id}
+                status={item.status}
+                created_at={item.created_at}
+              />
             )}
-            keyExtractor={(item) => item.bid_id}
           />
         </SafeAreaView>
       </View>

@@ -21,6 +21,7 @@ export default function ProviderHomepage() {
           data={testJobData}
           renderItem={({ item }) => (
             <JobItem
+              job_id={item.job_id}
               summary={item.summary}
               job_detail={item.job_detail}
               created_by={item.created_by}
