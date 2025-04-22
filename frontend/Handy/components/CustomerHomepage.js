@@ -55,6 +55,7 @@ export default function CustomerHomepage() {
           data={testJobData}
           renderItem={({ item }) => (
             <JobItem
+              job_id={item.job_id}
               summary={item.summary}
               job_detail={item.job_detail}
               created_by={item.created_by}
@@ -76,6 +77,7 @@ export default function CustomerHomepage() {
               keyExtractor={(item) => item.id.toString()}
               renderItem={({ item }) => (
                 <JobItem
+                  job_id={item.job_id}
                   summary={item.summary}
                   job_detail={item.job_detail}
                   created_by={item.created_by}

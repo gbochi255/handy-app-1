@@ -11,6 +11,7 @@ import { Card } from "react-native-paper";
 // }
 
 export default function JobItem({
+  job_id,
   summary,
   job_detail,
   created_by,
@@ -22,7 +23,11 @@ export default function JobItem({
   const navigation = useNavigation();
 
   return (
-    <Card style={styles.card} onPress={() => navigation.navigate("JobPage")}>
+    <Card
+      style={styles.card}
+      onPress={() => navigation.navigate("JobPage")}
+      job_id={job_id}
+    >
       <Card.Content>
         <View style={styles.row}>
           <Image
