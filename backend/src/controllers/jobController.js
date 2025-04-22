@@ -14,11 +14,8 @@ exports.getJobs = (request, response, next) => {
 
 
 exports.getClientJobs = (request, response, next) => {
-    console.log("Running getClientJobs")
 
     const { client_id, status } = request.query;
-    console.log("client:", client_id)
-    console.log("status:", status)
 
     fetchClientJobs( client_id, status )
     .then((jobs) => {
@@ -28,13 +25,9 @@ exports.getClientJobs = (request, response, next) => {
 };
 
 exports.getProviderJobs = (request, response, next) => {
-    console.log("Running getProviderJobs");
   
     const { distance, status } = request.query;
     const {provider_id: user_id} = request.params
-    console.log("user_id:", user_id);
-    console.log("distance:", distance);
-    console.log("status:", status);
   
     if (!user_id) {
     return Promise.reject({
@@ -71,10 +64,8 @@ exports.getProviderJobs = (request, response, next) => {
   };
 
   exports.getProviderBids = (request, response, next) => {
-    console.log("Running getProviderBids");
   
     const { provider_id } = request.params;
-    console.log("provider_id:", provider_id);
   
     jobModel
       .fetchProviderBids(provider_id)
@@ -85,10 +76,8 @@ exports.getProviderJobs = (request, response, next) => {
   };
   
   exports.getProviderWonJobs = (request, response, next) => {
-    console.log("Running getProviderWonJobs");
     
     const { provider_id } = request.params;
-    console.log("provider_id:", provider_id);
     
     jobModel
     .fetchProviderWonJobs(provider_id)
@@ -99,7 +88,6 @@ exports.getProviderJobs = (request, response, next) => {
   };
   
   exports.createJob = (request, response, next) => {
-    console.log("Running postJob");
     const job=request.body
 
     // check for required fields 
@@ -134,7 +122,6 @@ exports.patchBidAccept = (request, response, next) => {
 
 exports.getJobByID = (request, response, next) => {
   const {job_id} = request.params
-  console.log("running getJobByID, ID:", job_id)
   jobModel.fetchJobByID(Number(job_id)).then((jobDetail)=>{
     response.status(200).send(jobDetail)
   })
@@ -142,14 +129,12 @@ exports.getJobByID = (request, response, next) => {
 }
 
 exports.postBid = (request, response, next) => {
-  // const {job_id} = request.params
   const bidData={job_id: request.params.job_id,
     amount: request.body.amount,
-    provider_id: request.body.provider_id}
-    console.log("Running postBid on job:", bidData)
-    jobModel.insertBid(bidData).then((bidResponse)=>{
+    provider_id: request.body.provider_id};
+  jobModel.insertBid(bidData).then((bidResponse)=>{
       response.status(200).send(bidResponse)
-    })
+  })
     .catch(next)
   }
 
