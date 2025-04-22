@@ -3,43 +3,53 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import testBidData from "../assets/testBidData";
 import BidItem from "./BidItem";
 
-export default function JobPage({ job_id }) {
+import Header from "./Header";
+
+export default function JobPage({ route }) {
+  const {
+    job_id,
+    summary,
+    job_detail,
+    created_by,
+    status,
+    photo_url,
+    target_date,
+    location,
+  } = route.params;
+
   return (
     <View>
+      <Header />
       <View style={styles.jobMetaData}>
-        <Image></Image>
+        <Image
+          source={{ uri: photo_url || "https://picsum.photos/seed/1/200/200" }}
+          style={styles.image}
+        />
         <View style={styles.jobInfo}>
-          <Text>Job:</Text>
-          <Text>Image:</Text>
-          <Text>Posted_date:</Text>
+          <Text style={styles.title}>{summary}</Text>
+          <Text style={styles.date}>Target Date: {target_date} </Text>
         </View>
       </View>
       <View>
-        <Text>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corporis
-          quasi expedita accusamus itaque recusandae dolor iusto earum, optio
-          veniam! Hic est ipsam excepturi saepe! Vel voluptatem quod aut cumque
-          recusandae?
-        </Text>
+        <Text style={styles.details}>Details: {job_detail}</Text>
       </View>
-      <View style={styles.container}>
-        <SafeAreaView>
-          <FlatList
-            data={testBidData} // an array of bid objects
-            keyExtractor={(item) => item.bid_id.toString()}
-            renderItem={({ item }) => (
-              <BidItem
-                bid_id={item.bid_id}
-                job_id={item.job_id}
-                amount={item.amount}
-                provider_id={item.provider_id}
-                status={item.status}
-                created_at={item.created_at}
-              />
-            )}
-          />
-        </SafeAreaView>
-      </View>
+
+      <SafeAreaView>
+        <FlatList
+          data={testBidData}
+          keyExtractor={(item) => item.bid_id.toString()}
+          renderItem={({ item }) => (
+            <BidItem
+              bid_id={item.bid_id}
+              job_id={item.job_id}
+              amount={item.amount}
+              provider_id={item.provider_id}
+              status={item.status}
+              created_at={item.created_at}
+            />
+          )}
+        />
+      </SafeAreaView>
     </View>
   );
 }
@@ -80,5 +90,25 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     borderWidth: 1,
     margin: 5,
+  },
+  image: {
+    width: 150,
+    height: 100,
+    borderRadius: 2,
+    marginRight: 10,
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: 500,
+    marginBottom: 10,
+  },
+  date: {
+    fontSize: 15,
+    color: "red",
+  },
+  details: {
+    fontSize: 22,
+    fontWeight: 300,
+    padding: 10,
   },
 });
