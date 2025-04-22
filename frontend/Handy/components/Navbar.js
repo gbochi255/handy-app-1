@@ -1,23 +1,23 @@
 import { StyleSheet, View, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useContext } from "react";
+import { UserContext } from "./UserContext";
 
 export default function Navbar() {
+  const { userData } = useContext(UserContext);
+  const loggedIn = userData.token;
   const navigation = useNavigation();
 
   return (
     <View style={styles.navbarButtonContainer}>
-      <View style={styles.customerButton}>
-        <Button
-          title="Customer"
-          onPress={() => navigation.navigate("CustomerHomepage")}
-        />
-      </View>
-      <View style={styles.providerButton}>
-        <Button
-          title="Provider"
-          onPress={() => navigation.navigate("ProviderHomepage")}
-        />
-      </View>
+      {loggedIn ? (
+        <View style={styles.providerButton}>
+          <Button
+            title="Available Listings"
+            onPress={() => navigation.navigate("ProviderHomepage")}
+          />
+        </View>
+      ) : null}
     </View>
   );
 }

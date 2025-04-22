@@ -1,8 +1,10 @@
 {
   "devDependencies": {
     "jest": "^29.7.0",
+    "jest-sorted": "^1.0.15",
     "nodemon": "^3.1.9",
-    "pg-format": "^1.0.4"
+    "pg-format": "^1.0.4",
+    "supertest": "^7.1.0"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -12,18 +14,26 @@
   },
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "listen.js",
   "scripts": {
     "setupdevdb": "psql -f db/setup-dev-db.sql",
     "seeddevdb": "psql -f db/seed/seed-dev.sql",
     "setuptestdb": "psql -f db/setup-test-db.sql",
     "seedtestdb": "psql -f db/seed/seed-test.sql",
-    "test": "psql -f db/setup-test-db.sql && psql -f db/seed/seed-test.sql && jest --detectOpenHandles",
-    "start": "node server.js",
-    "dev": "nodemon src/server.js"
+    "setupproddb": "psql -f db/setup-prod-db.sql",
+    "seedproddb": "node db/seed/seed.js",
+    "test": "psql -f db/setup-test-db.sql && psql -f db/seed/merged-seed.sql && jest --detectOpenHandles",
+    "start": "node listen.js",
+    "dev": "nodemon listen.js",
+    "seed-prod": "NODE_ENV=production npm run seedproddb"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "jest": {
+    "setupFilesAfterEnv": [
+      "jest-sorted"
+    ]
+  }
 }

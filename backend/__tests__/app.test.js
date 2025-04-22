@@ -22,26 +22,26 @@ describe("POST /register", () => {
         lastname: "Smith",
         email: "ian.smith@gmail.com",
         password: "abc123",
-        postcode: "NG1 4QZ",
+        postcode: "N17 8LR",
         address: "1 Acacia Avenue",
         city: "London",
         avatar_url:
           "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp",
         about_me: "I am a new user of the brilliant Handy app.",
+        longitude: "-0.08448",
+        latitude: "51.605674",
       })
       .expect(201)
       .then(({ body: user }) => {
-        console.log(user);
         expect(user).toHaveProperty("user_id");
         expect(user.firstname).toBe("Ian");
         expect(user.lastname).toBe("Smith");
         expect(user.email).toBe("ian.smith@gmail.com");
         expect(user.password).toBe("abc123");
-        expect(user.postcode).toBe("NG1 4QZ");
+        expect(user.postcode).toBe("N17 8LR");
         expect(user.address).toBe("1 Acacia Avenue");
-        expect(user.avatar_url).toBe(
-          "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp"
-        );
+        expect(user.avatar_url).toBe("https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp")
+        expect(user.location_wkt).toBe('POINT(-0.08448 51.605674)');
       });
   });
   test("409: email already exists", () => {
@@ -109,7 +109,6 @@ describe("POST /login", () => {
       .expect(401)
       .then((response) => {
         const { body } = response;
-        console.log(body);
         expect(body.message).toBe("Invalid email or password");
       });
   });
@@ -120,8 +119,41 @@ describe("POST /login", () => {
       .expect(401)
       .then((response) => {
         const { body } = response;
-        console.log(body);
         expect(body.message).toBe("Invalid email or password");
       });
   });
 });
+describe("PATCH: /users/:user_id", () => {
+  test("Returns user object with updated provider_status (true)", () => {
+      return supertest(app)
+      .patch("/users/2")
+      .send({isProvider : true})
+      .expect(200)
+      .then(response => {
+          const { body } = response;
+          expect(body.user_id).toBe(2)
+          expect(body.is_provider).toBe(true)
+      })
+  })
+  test("Returns user object with updated provider_status (false)", () => {
+      return supertest(app)
+      .patch("/users/42")
+      .send({isProvider : false})
+      .expect(200)
+      .then(response => {
+          const { body } = response;
+          expect(body.user_id).toBe(42)
+          expect(body.is_provider).toBe(false)
+      })
+  })
+  test("Returns 404 when user does not exist", () => {
+      return supertest(app)
+      .patch("/users/62")
+      .send({isProvider : true})
+      .expect(404)
+      .then(response => {
+          const { body } = response;
+          expect(body.message).toBe("User Not found")
+      })
+  })
+})
