@@ -23,7 +23,7 @@
     "setupproddb": "psql -f db/setup-prod-db.sql",
     "seedproddb": "node db/seed/seed.js",
     "test": "psql -f db/setup-test-db.sql && psql -f db/seed/merged-seed.sql && jest --detectOpenHandles",
-    "start": "NODE_ENV=production node listen.js",
+    "start": "node listen.js",
     "dev": "nodemon listen.js",
     "seed-prod": "NODE_ENV=production npm run seedproddb"
   },
