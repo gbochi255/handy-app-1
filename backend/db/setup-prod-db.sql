@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS handy_prod;
+CREATE DATABASE handy_prod;
