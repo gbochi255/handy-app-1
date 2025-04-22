@@ -288,3 +288,26 @@ exports.fetchJobByID = (job_id) => {
   })
 
 }
+
+exports.insertBid = (bidData) => {
+  console.log("Running insertBid")
+  const {job_id, amount, provider_id} = bidData
+
+  if (!job_id || !amount || !provider_id) {
+    return Promise.reject({status: 400, message: "Missing required parameters {amount:, provider_id:}"})
+  }
+
+  const queryStr=`INSERT INTO bids (job_id, amount, provider_id)
+    VALUES ($1, $2, $3)
+    RETURNING *;
+  `;
+
+  const queryParams=[job_id, amount, provider_id]
+
+  return db.query(queryStr,queryParams).then(({rows})=>{
+    const bid=rows[0]
+    bid.amount=parseFloat(bid.amount)
+    return bid
+  })
+
+}

@@ -139,5 +139,17 @@ exports.getJobByID = (request, response, next) => {
     response.status(200).send(jobDetail)
   })
   .catch(next)
-
 }
+
+exports.postBid = (request, response, next) => {
+  // const {job_id} = request.params
+  const bidData={job_id: request.params.job_id,
+    amount: request.body.amount,
+    provider_id: request.body.provider_id}
+    console.log("Running postBid on job:", bidData)
+    jobModel.insertBid(bidData).then((bidResponse)=>{
+      response.status(200).send(bidResponse)
+    })
+    .catch(next)
+  }
+

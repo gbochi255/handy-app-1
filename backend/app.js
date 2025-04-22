@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const { loginUser, createUser, patchProviderStatus } = require("./src/controllers/userController");
-const { getJobs, getClientJobs, getProviderJobs, getProviderBids, getProviderWonJobs, postJob, createJob, patchJobComplete, patchBidAccept, getJobByID } = require("./src/controllers/jobController")
+const { getJobs, getClientJobs, getProviderJobs, getProviderBids, getProviderWonJobs, postJob, createJob, patchJobComplete, patchBidAccept, getJobByID, postBid } = require("./src/controllers/jobController")
 const { validateRegistration, validateLogin, handleDefaultErrors, handleDBErrors } = require("./src/middleware");
 const baseurl = "";
 
@@ -25,6 +25,8 @@ app.get(`${baseurl}/jobs/provider/:provider_id/bids`, getProviderBids)
 app.get(`${baseurl}/jobs/provider/:provider_id/won`, getProviderWonJobs)
 
 app.post(`${baseurl}/jobs/create`, createJob)
+
+app.post(`${baseurl}/jobs/:job_id/bid`, postBid)
 
 app.patch(`${baseurl}/jobs/:job_id/complete`, patchJobComplete)
 
