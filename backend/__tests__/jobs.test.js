@@ -216,7 +216,6 @@ describe("GET /jobs/provider/provider_id", () => {
         .expect(404)
         .then(response => {
             const { body } = response;
-            console.log(body)
             expect(body.message).toBe( "User is not a provider" );
             expect(body.status).toBe( 404 );
         });
@@ -228,7 +227,6 @@ describe("GET /jobs/provider/provider_id", () => {
         .expect(400)
         .then(response => {
           const { body } = response;
-          console.log(body)
           expect(body.message).toBe( "Invalid status value" );
           expect(body.status).toBe( 400 );
 
@@ -241,7 +239,6 @@ describe("GET /jobs/provider/provider_id", () => {
         .expect(400)
         .then(response => {
           const { body } = response;
-          console.log(body)
           expect(body.message).toBe( "Distance must be a positive number" );
           expect(body.status).toBe( 400 );
         });
@@ -255,7 +252,6 @@ describe("GET /jobs/provider/provider_id", () => {
         .expect(200)
         .then(response => {
           const jobs = response.body.jobs;
-          console.log(jobs)
           const waitingJobs = jobs.filter(job => job.bid_status === "Waiting");
           expect(waitingJobs).toHaveLength(2); // job_id=1, 7 (both open)
           waitingJobs.forEach(job => {
@@ -332,7 +328,6 @@ describe("GET /jobs/provider/provider_id", () => {
           .expect(400)
           .then(response => {
             const body=response.body
-            console.log ("error: ",body)
             expect(body.message).toBe( "Bad request");
           });
       });
@@ -564,7 +559,6 @@ describe("GET /jobs/:job_id", ()=>{
     .expect(200)
     .then(response => {
       const job = response.body
-      console.log(job)
       expect(job.job_id).toBe(1)
       expect(job.summary).toBe("Fix kitchen sink")
       expect(job.job_detail).toBe("Leaking pipe under kitchen sink needs repair.")
@@ -589,7 +583,7 @@ describe("GET /jobs/:job_id", ()=>{
 })
 
 
-describe.only("POST /jobs/:job_id/bid", ()=>{
+describe("POST /jobs/:job_id/bid", ()=>{
   test("200: Creates a bid and returns it", ()=>{
     return supertest(app)
     .post("/jobs/2/bid")
@@ -600,7 +594,6 @@ describe.only("POST /jobs/:job_id/bid", ()=>{
     .expect(200)
     .then(response => {
       const bid=response.body
-      console.log(bid)
       expect(bid).toHaveProperty("bid_id")
       expect(bid).toHaveProperty("created_at")
       expect(bid.job_id).toBe(2)
@@ -619,7 +612,6 @@ describe.only("POST /jobs/:job_id/bid", ()=>{
     .expect(400)
     .then(response => {
       const error=response.body
-      console.log(error)
       expect(error.status).toBe(400)
       expect(error.message).toBe("Missing required parameters {amount:, provider_id:}")
     })
@@ -635,7 +627,6 @@ describe.only("POST /jobs/:job_id/bid", ()=>{
     .then(response => {
       const bid=response.body
       const error=response.body
-      console.log(error)
       expect(error.status).toBe(404)
       expect(error.message).toBe("Not found")
     })

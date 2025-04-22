@@ -17,9 +17,9 @@ app.get(`${baseurl}/bids/:job_id`, getBids)
 
 app.get(`${baseurl}/jobs`, getJobs)
 
-app.get(`${baseurl}/jobs/:job_id`, getJobByID)
-
 app.get(`${baseurl}/jobs/client`, getClientJobs)
+
+app.get(`${baseurl}/jobs/:job_id`, getJobByID)
 
 app.get(`${baseurl}/jobs/provider/:provider_id`, getProviderJobs)
 

@@ -18,7 +18,6 @@ exports.fetchJobs = ( created_by, status ) => {
 }
 
 exports.fetchClientJobs = (client_id, status) => {
-    console.log("Running fetchClientJobs");
   
     let validateClient = Promise.resolve();
     if (client_id) {
@@ -60,13 +59,11 @@ exports.fetchClientJobs = (client_id, status) => {
         return db.query(queryStr, [...queryParams]);
       })
       .then(({ rows }) => {
-        console.log("returned:", rows.length);
         return rows;
       });
   };
 
   exports.fetchProviderJobs = (user_id, distance = 10, status) => {
-    console.log("Running fetchProviderJobs");
   
     return checkUserExists(user_id, true)
       .then(() => {
@@ -111,13 +108,11 @@ exports.fetchClientJobs = (client_id, status) => {
         return db.query(queryStr, queryParams);
       })
       .then(({ rows }) => {
-        console.log("returned:", rows.length);
         return rows;
       });
   };
 
   const fetchProviderJobsWithBids = (provider_id, additionalSelect = '', whereConditions) => {
-    console.log(`Running fetchProviderJobsWithBids for provider_id: ${provider_id}`);
   
     return checkUserExists(provider_id, true)
       .then(() => {
@@ -143,7 +138,6 @@ exports.fetchClientJobs = (client_id, status) => {
         return db.query(queryStr, queryParams);
       })
       .then(({ rows }) => {
-        console.log("returned:", rows.length);
         return rows;
       });
   };
@@ -178,7 +172,6 @@ exports.fetchClientJobs = (client_id, status) => {
 
 
   exports.postJob = (jobData) => {
-    console.log("Running postJob")
     const queryParams=[
       jobData.summary, 
       jobData.job_detail, 
@@ -249,7 +242,6 @@ exports.updateBidAccept = (job_id, bid_id) => {
     return db.query(queryStr, [job_id, bid_id])
         .then(({ rows }) => {
             if (rows.length === 0) {
-              console.log(rows)
                 return Promise.reject({
                     status: 404,
                     message: 'Job Not found',
@@ -268,7 +260,6 @@ exports.updateBidAccept = (job_id, bid_id) => {
 
 
 exports.fetchJobByID = (job_id) => {
-  console.log("Running fetchJobByID, jobID:", job_id)
 
   let queryStr = `
   SELECT *, ST_AsText(location) AS location_wkt
@@ -277,7 +268,6 @@ exports.fetchJobByID = (job_id) => {
 `;
 
   return db.query(queryStr, [job_id]).then(({rows})=>{
-    console.log("bids:", rows)
     if (rows.length === 0) {
       return Promise.reject({
         status: 404,
@@ -291,7 +281,6 @@ exports.fetchJobByID = (job_id) => {
 }
 
 exports.insertBid = (bidData) => {
-  console.log("Running insertBid")
   const {job_id, amount, provider_id} = bidData
 
   if (!job_id || !amount || !provider_id) {
