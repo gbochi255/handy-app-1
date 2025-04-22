@@ -19,16 +19,20 @@
     "seeddevdb": "psql -f db/seed/seed-dev.sql",
     "setuptestdb": "psql -f db/setup-test-db.sql",
     "seedtestdb": "psql -f db/seed/seed-test.sql",
+    "setupproddb": "psql -f db/setup-prod-db.sql",
+    "seedproddb": "node db/seed/seed.js",
     "test": "psql -f db/setup-test-db.sql && psql -f db/seed/merged-seed.sql && jest --detectOpenHandles",
     "start": "node server.js",
     "dev": "nodemon src/server.js",
-    "seed-prod": "NODE_ENV=production npm run seeddevdb"
+    "seed-prod": "NODE_ENV=production npm run seedproddb"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "jest": {
-    "setupFilesAfterEnv": ["jest-sorted"]
+    "setupFilesAfterEnv": [
+      "jest-sorted"
+    ]
   }
 }
