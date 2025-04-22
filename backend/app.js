@@ -3,6 +3,7 @@ const app = express();
 const { loginUser, createUser, patchProviderStatus } = require("./src/controllers/userController");
 const { getJobs, getClientJobs, getProviderJobs, getProviderBids, getProviderWonJobs, postJob, createJob, patchJobComplete, patchBidAccept, getJobByID, postBid } = require("./src/controllers/jobController")
 const { validateRegistration, validateLogin, handleDefaultErrors, handleDBErrors } = require("./src/middleware");
+const { getBids } = require("./src/controllers/bidController");
 const baseurl = "";
 
 app.use(express.json());
@@ -11,6 +12,8 @@ app.use(express.json());
 app.post(`${baseurl}/register`, validateRegistration, createUser);
 
 app.post(`${baseurl}/login`, validateLogin, loginUser);
+
+app.get(`${baseurl}/bids/:job_id`, getBids)
 
 app.get(`${baseurl}/jobs`, getJobs)
 

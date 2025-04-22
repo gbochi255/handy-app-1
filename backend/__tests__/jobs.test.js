@@ -1,7 +1,6 @@
 const supertest = require("supertest");
 const db = require("../db/connection");
 const app = require("../app");
-const { response } = require("express");
 require("jest-sorted");
 // const seed = require("../db/seed/merged-seed.sql")
 

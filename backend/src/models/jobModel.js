@@ -277,6 +277,7 @@ exports.fetchJobByID = (job_id) => {
 `;
 
   return db.query(queryStr, [job_id]).then(({rows})=>{
+    console.log("bids:", rows)
     if (rows.length === 0) {
       return Promise.reject({
         status: 404,
