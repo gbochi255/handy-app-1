@@ -22,23 +22,22 @@ export default function CustomerHomepage() {
   const { userData } = useContext(UserContext);
   const loggedIn = userData.isProvider;
 
-  // useEffect(() => {
-  //   fetch("OUR END POINT/jobs")
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setJobs(data);
-  //       setLoading(false);
-  //     })
-  //     .catch((err) => {
-  //       console.error("Failed to fetch jobs:", err);
-  //       setLoading(false);
-  //     });
-  // }, []);
+  useEffect(() => {
+    fetch("https://handy-rpx6.onrender.com/jobs")
+      .then((res) => res.json())
+      .then((data) => {
+        setJobs(data.jobs);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch jobs:", err);
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header />
-      {/* <Navbar /> */}
       {loggedIn ? (
         <View style={styles.navbarButtonContainer}>
           <View style={styles.providerButton}>
@@ -51,45 +50,26 @@ export default function CustomerHomepage() {
       ) : null}
 
       <View style={styles.contentContainer}>
-        <FlatList
-          data={testJobData}
-          renderItem={({ item }) => (
-            <JobItem
-              job_id={item.job_id}
-              summary={item.summary}
-              job_detail={item.job_detail}
-              created_by={item.created_by}
-              status={item.status}
-              photo_url={item.photo_url}
-              target_date={item.target_date}
-              location={item.location}
-            />
-          )}
-          keyExtractor={(item) => item.job_id}
-        />
-
-        {/* <View style={styles.contentContainer}>
-          {loading ? (
-            <Text>Loading jobs...</Text>
-          ) : (
-            <FlatList
-              data={jobs}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => (
-                <JobItem
-                  job_id={item.job_id}
-                  summary={item.summary}
-                  job_detail={item.job_detail}
-                  created_by={item.created_by}
-                  status={item.status}
-                  photo_url={item.photo_url}
-                  target_date={item.target_date}
-                  location={item.location}
-                />
-              )}
-            />
-          )}
-        </View> */}
+        {loading ? (
+          <Text>Loading jobs...</Text>
+        ) : (
+          <FlatList
+            data={jobs}
+            keyExtractor={(item) => item.job_id.toString()}
+            renderItem={({ item }) => (
+              <JobItem
+                job_id={item.job_id}
+                summary={item.summary}
+                job_detail={item.job_detail}
+                created_by={item.created_by}
+                status={item.status}
+                photo_url={item.photo_url}
+                target_date={item.target_date}
+                location={item.location}
+              />
+            )}
+          />
+        )}
       </View>
 
       <TouchableOpacity

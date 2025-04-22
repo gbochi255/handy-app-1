@@ -25,8 +25,18 @@ export default function JobItem({
   return (
     <Card
       style={styles.card}
-      onPress={() => navigation.navigate("JobPage")}
-      job_id={job_id}
+      onPress={() =>
+        navigation.navigate("JobPage", {
+          job_id,
+          summary,
+          job_detail,
+          created_by,
+          status,
+          photo_url,
+          target_date,
+          location,
+        })
+      }
     >
       <Card.Content>
         <View style={styles.row}>
