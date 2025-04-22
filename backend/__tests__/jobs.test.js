@@ -454,3 +454,85 @@ describe("POST /jobs", ()=>{
 
 })
 })
+describe("PATCH: /jobs/:job_id/complete", () => {
+  test("200: Respond with updated job object", () => {
+      return supertest(app)
+      .patch("/jobs/3/complete")
+      .expect(200)
+      .then(response => {
+          const { body } = response;
+          expect(body.job_id).toBe(3)
+          expect(body).toHaveProperty("summary")
+          expect(body).toHaveProperty("job_detail")
+          expect(body).toHaveProperty("category")
+          expect(body).toHaveProperty("created_by")
+          expect(body.status).toBe("completed")
+          expect(body.completion_date).not.toBe(null)
+          expect(body).toHaveProperty("photo_url")
+          expect(body).toHaveProperty("target_date")
+          expect(body).toHaveProperty("location")
+      })
+  })
+  test("404: Respond 404 if job does not exist", () => {
+      return supertest(app)
+      .patch("/jobs/22/complete")
+      .expect(404)
+      .then(response => {
+          const { body } = response;
+          expect(body.message).toBe("Job Not found")
+      })
+  })
+})
+
+describe("PATCH: /jobs/:job_id/accept/:bid_id", () => {
+  test("200: Respond with array containing the accepted bid object", () => {
+      return supertest(app)
+      .patch("/jobs/4/accept/7")
+      .expect(200)
+      .then(response => {
+          const { body } = response;
+          expect(body.length).toBe(2)
+          const acceptedBid = body[0]
+          expect(acceptedBid.bid_id).toBe(7)
+          expect(acceptedBid.job_id).toBe(4)
+          expect(acceptedBid).toHaveProperty("amount")
+          expect(acceptedBid).toHaveProperty("provider_id")
+          expect(acceptedBid.status).toBe("accepted")
+          expect(acceptedBid).toHaveProperty("created_at")
+      })
+  })
+  test("200: Respond with array containing the the other rejected bid objects", () => {
+      return supertest(app)
+      .patch("/jobs/4/accept/7")
+      .expect(200)
+      .then(response => {
+          const { body } = response;
+          expect(body.length).toBe(2)
+          const rejectedBid = body[1]
+          expect(rejectedBid.bid_id).toBe(8)
+          expect(rejectedBid.job_id).toBe(4)
+          expect(rejectedBid).toHaveProperty("amount")
+          expect(rejectedBid).toHaveProperty("provider_id")
+          expect(rejectedBid.status).toBe("rejected")
+          expect(rejectedBid).toHaveProperty("created_at")
+      })
+  })
+  test("404: Respond 404 if job does not exist", () => {
+      return supertest(app)
+      .patch("/jobs/21/accept/1")
+      .expect(404)
+      .then(response => {
+          const { body } = response;
+          expect(body.message).toBe("Job Not found")
+      })
+  })
+  test("404: Respond 404 if bid does not exist", () => {
+      return supertest(app)
+      .patch("/jobs/4/accept/9")
+      .expect(404)
+      .then(response => {
+          const { body } = response;
+          expect(body.message).toBe("Bid Not found")
+      })
+  })
+})

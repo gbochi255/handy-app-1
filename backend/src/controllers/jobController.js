@@ -1,5 +1,5 @@
 const { promises } = require("supertest/lib/test");
-const { fetchJobs, fetchClientJobs, fetchProviderJobs } = require("../models/jobModel")
+const { fetchJobs, fetchClientJobs, fetchProviderJobs, updateJobComplete, updateBidAccept } = require("../models/jobModel")
 const jobModel = require("../models/jobModel");
 const { request, response } = require("express");
 
@@ -114,3 +114,22 @@ exports.getProviderJobs = (request, response, next) => {
     })
     .catch(next)
   }
+
+  exports.patchJobComplete = (request, response, next) => {
+    const { job_id } = request.params
+    updateJobComplete(Number(job_id))
+    .then((job) => {
+        response.status(200).send(job);
+    })
+    .catch(next)
+}
+
+exports.patchBidAccept = (request, response, next) => {
+    const { job_id } = request.params
+    const { bid_id } = request.params
+    updateBidAccept(Number(job_id), Number(bid_id))
+    .then((bids) => {
+        response.status(200).send(bids);
+    })
+    .catch(next)
+}

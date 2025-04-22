@@ -65,3 +65,23 @@ exports.postLogin = ({ email, password }) => {
       return rows[0];
     });
 };
+
+exports.updateProviderStatus = (user_id, isProvider) => {
+  let queryStr = `
+  UPDATE users
+  SET is_provider = $2
+  WHERE user_id = $1
+  RETURNING *
+  `
+
+  return db.query(queryStr, [user_id, isProvider])
+      .then(({ rows }) => {
+          if (rows.length === 0) {
+              return Promise.reject({
+                  status: 404,
+                  message: 'User Not found',
+              })
+          }
+          return rows[0];
+      })
+}
