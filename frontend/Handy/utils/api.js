@@ -9,8 +9,8 @@ const api = axios.create({
 
 export const getJobs = () => {
     return api.get(`/jobs`)
-    .then(({data : {jobs}}) => {
-        return jobs
+    .then(({data}) => {
+        return data
     })
 }
 
@@ -19,8 +19,8 @@ export const getJobs = () => {
 //status values: 'open', 'accepted', 'completed', 'expired'
 export const getClientJob = (client, status) => {
     return api.get(`/jobs?created_by=${client}&status=${status}`)
-    .then(({data : {jobs}}) => {
-        return jobs
+    .then(({data}) => {
+        return data
     })
 }
 
@@ -28,8 +28,8 @@ export const getClientJob = (client, status) => {
 
 export const getProviderJobs = (provider) => {
     return api.get(`/jobs/provider/${provider}`)
-    .then(({data :{jobs}}) => {
-        return jobs
+    .then(({data}) => {
+        return data
     })
 }
 
@@ -37,9 +37,8 @@ export const getProviderJobs = (provider) => {
 
 export const getProviderBids = (provider) => {
     return api.get(`/jobs/provider/${provider}/bids`)
-    .then(({data :{jobs}}) => {
-        console.log(jobs, '<---getProviderJobs in api.js')
-        return jobs
+    .then(({data}) => {
+        return data
     })
 }
 
@@ -47,11 +46,22 @@ export const getProviderBids = (provider) => {
 
 export const getProviderWonJobs = (provider) => {
     return api.get(`/jobs/provider/${provider}/won`)
-    .then(({data :{jobs}}) => {
-        return jobs
+    .then(({data}) => {
+        return data
     })
 }
 
 
+
+export const loginUser = (email, password) => {
+    const requestObject = {
+    email: email,
+    password: password,
+    }
+    return api.post('/login', requestObject)
+    .then(({data}) => {
+        return data
+    })
+}
 
 
