@@ -7,6 +7,16 @@ const api = axios.create({
 
 
 
+export const getBids = (job_id) => {
+    return api.get(`/bids/${job_id}`)
+    .then(({data}) => {
+        console.log(data, '<---getBids in api.js')
+        return data
+    })
+}
+
+
+
 export const getJobs = () => {
     return api.get(`/jobs`)
     .then(({data}) => {
@@ -17,9 +27,19 @@ export const getJobs = () => {
 
 
 //status values: 'open', 'accepted', 'completed', 'expired'
-export const getClientJob = (client, status) => {
+export const getClientJobs = (client, status) => {
     return api.get(`/jobs?created_by=${client}&status=${status}`)
     .then(({data}) => {
+        return data
+    })
+}
+
+
+
+export const getJobByID = (job_id) => {
+    return api.get(`/jobs/${job_id}`)
+    .then(({data}) => {
+        console.log(data, '<--- getJobID in api.js')
         return data
     })
 }
