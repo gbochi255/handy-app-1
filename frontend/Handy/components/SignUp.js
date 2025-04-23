@@ -18,13 +18,15 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
 import axios from "axios";
-import { registerUser } from "../utils/api";;
+import { registerUser } from "../utils/api";
 export default function SignUp() {
   const navigation = useNavigation();
   const route = useRoute();
   const { photoUrl } = route.params || {};
 
   const { userData, setUserData } = useContext(UserContext);
+
+
 
   function handleSubmit() {
     const { firstName, lastName, email, password, postcode, county, city, bio } =
@@ -59,6 +61,9 @@ export default function SignUp() {
         userData.isProvider,
       )
       .then(() => {
+
+
+      //reset the userData
         setUserData({
           firstName: "",
           lastName: "",
