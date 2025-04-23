@@ -10,6 +10,7 @@ const api = axios.create({
 export const getBids = (job_id) => {
     return api.get(`/bids/${job_id}`)
     .then(({data}) => {
+        console.log(data)
         return data
     })
 }
@@ -32,6 +33,9 @@ export const getClientJobs = (client, status) => {
         return data
     })
 }
+
+
+
 
 
 
@@ -107,3 +111,38 @@ export const registerUser = (
 }
 
 
+export const acceptBid = (job_id, bid_id) => {
+    return api.patch(`/jobs/${job_id}/accept/${bid_id}`)
+    .then(({data}) => {
+        return data
+    })
+}
+
+
+
+
+//Paul
+// jobRouter
+// .route("/:job_id/complete")
+// .patch(jobController.patchJobComplete)
+
+
+
+// jobRouter
+// .route("/:job_id/bid")
+// .post(jobController.postBid)
+
+
+
+
+
+//Joe
+// jobRouter
+// .route("/create")
+// .post(jobController.createJob)
+
+
+
+// userRouter
+// .route("/:user_id")
+// .patch(userController.patchProviderStatus)
