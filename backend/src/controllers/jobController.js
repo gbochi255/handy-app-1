@@ -91,7 +91,7 @@ exports.getProviderJobs = (request, response, next) => {
     const job=request.body
 
     // check for required fields 
-    if (!job.summary||!job.job_detail||!job.category||!job.created_by||!job.photo_url||!job.postcode) {
+    if (!job.summary||!job.job_detail||!job.created_by||!job.photo_url) {
       return Promise.reject({status: 400, message:"Required paramaters missing from body"})
     }
 
