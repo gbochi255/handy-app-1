@@ -3,12 +3,14 @@ const userRouter = require("./userRouter");
 const jobRouter = require("./jobRouter")
 const bidRouter = require("./bidRouter")
 
+// apiRouter.use("/register", userRouter);
+// apiRouter.use("/login", userRouter)
+
+
+apiRouter.use("/bids", bidRouter);
+
+apiRouter.use("/jobs", jobRouter);
+
 apiRouter.use("/users", userRouter);
-apiRouter.use("/register", userRouter);
-apiRouter.use("/login", userRouter)
-
-apiRouter.use("/jobs", jobRouter)
-
-apiRouter.use("/bids", bidRouter)
 
 module.exports = apiRouter;

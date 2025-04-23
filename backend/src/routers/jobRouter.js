@@ -28,18 +28,18 @@ jobRouter
 
 jobRouter
 .route("/create")
-.get(jobController.createJob)
+.post(jobController.createJob)
 
 jobRouter
 .route("/:job_id/bid")
-.get(jobController.postBid)
+.post(jobController.postBid)
 
 jobRouter
 .route("/:job_id/complete")
-.get(jobController.patchJobComplete)
+.patch(jobController.patchJobComplete)
 
 jobRouter
 .route("/:job_id/accept/:bid_id")
-.get(jobController.patchBidAccept)
+.patch(jobController.patchBidAccept)
 
 module.exports = jobRouter
