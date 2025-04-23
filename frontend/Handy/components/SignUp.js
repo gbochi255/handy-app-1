@@ -175,7 +175,7 @@ export default function SignUp() {
 
             <View style={styles.readOnlyInput}>
               <Text style={styles.readOnlyText}>
-                {userData.city || "*** City ***"}
+                {userData.city || userData.county || "*** City ***"}
               </Text>
             </View>
 
