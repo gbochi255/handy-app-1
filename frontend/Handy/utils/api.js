@@ -1,21 +1,15 @@
 import axios from 'axios'
 
-
 const api = axios.create({
     baseURL: 'https://handy-rpx6.onrender.com/'
 })
 
-
-
 export const getBids = (job_id) => {
     return api.get(`/bids/${job_id}`)
     .then(({data}) => {
-        console.log(data)
         return data
     })
 }
-
-
 
 export const getJobs = () => {
     return api.get(`/jobs`)
@@ -24,8 +18,6 @@ export const getJobs = () => {
     })
 }
 
-
-
 //status values: 'open', 'accepted', 'completed', 'expired'
 export const getClientJobs = (client, status) => {
     return api.get(`/jobs?created_by=${client}&status=${status}`)
@@ -33,11 +25,6 @@ export const getClientJobs = (client, status) => {
         return data
     })
 }
-
-
-
-
-
 
 export const getJobByID = (job_id) => {
     return api.get(`/jobs/${job_id}`)
@@ -55,8 +42,6 @@ export const getProviderJobs = (provider) => {
     })
 }
 
-
-
 export const getProviderBids = (provider) => {
     return api.get(`/jobs/provider/${provider}/bids`)
     .then(({data}) => {
@@ -64,16 +49,12 @@ export const getProviderBids = (provider) => {
     })
 }
 
-
-
 export const getProviderWonJobs = (provider) => {
     return api.get(`/jobs/provider/${provider}/won`)
     .then(({data}) => {
         return data
     })
 }
-
-
 
 export const loginUser = (email, password) => {
     const requestObject = {
@@ -85,8 +66,6 @@ export const loginUser = (email, password) => {
         return data
     })
 }
-
-
 
 export const registerUser = (
     firstname, lastname, email, password, postcode, address, city, avatar_url, about_me, longitude, latitude
@@ -118,30 +97,6 @@ export const acceptBid = (job_id, bid_id) => {
     })
 }
 
-
-
-
-//Paul
-// jobRouter
-// .route("/:job_id/complete")
-// .patch(jobController.patchJobComplete)
-
-
-
-// jobRouter
-// .route("/:job_id/bid")
-// .post(jobController.postBid)
-
-
-
-
-
-//Joe
-// jobRouter
-// .route("/create")
-// .post(jobController.createJob)
-
-
 export const postJob = (summary, job_detail, category, created_by, target_date, photo_url, postcode) => {
     const requestObject = {
         summary,
@@ -158,8 +113,12 @@ export const postJob = (summary, job_detail, category, created_by, target_date, 
     })
 }
 
-
-// userRouter
-// .route("/:user_id")
-// .patch(userController.patchProviderStatus)
+export const becomeProvider = (user_id, isProvider) => {
+    const requestObject = { isProvider }
+    return api.patch(`/users/${user_id}`, requestObject)
+    .then(({data}) => {
+        console.log(data)
+        return data
+    })
+}
 
