@@ -7,13 +7,13 @@ import {
   Button,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "./Header";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
 import { useEffect, useState } from "react";
-import testJobData from "../assets/testJobData";
 import JobItem from "./JobItem";
+import { getJobs } from "../utils/api";
 
 export default function CustomerHomepage() {
   const [jobs, setJobs] = useState([]);
@@ -23,10 +23,9 @@ export default function CustomerHomepage() {
   const loggedIn = userData.isProvider;
 
   useEffect(() => {
-    fetch("https://handy-rpx6.onrender.com/jobs")
-      .then((res) => res.json())
-      .then((data) => {
-        setJobs(data.jobs);
+    getJobs()
+      .then((jobObjects) => {
+        setJobs(jobObjects);
         setLoading(false);
       })
       .catch((err) => {
