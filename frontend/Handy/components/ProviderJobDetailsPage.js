@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
 import testJobData from '../assets/testJobData';
-
+import { postABid } from '../utils/api';
 export default function ProviderJobDetailPage({ route }) {
   const { jobId } = route.params;
   const job = testJobData.find((item) => item.job_id === jobId);
@@ -23,6 +23,9 @@ export default function ProviderJobDetailPage({ route }) {
     }; 
 
     //  API call to submit the bid
+    postABid(jobId, Number(bidAmount), 43)
+    .then(data =>  Alert.alert('Bid succesfully submitted'))
+    .catch(error =>  Alert.alert('Error', 'Please enter a valid bid amount.'))
     console.log('Submitting bid:', bid);
     setSubmittedBid(bid.amount);
     setShowModal(false);
