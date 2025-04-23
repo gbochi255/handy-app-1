@@ -15,6 +15,9 @@ exports.postUser = ({
   longitude
 }) => {
 
+  // standardise email to lowercase to prevent login issues
+  email = email.toLowerCase();
+
   return db
     .query(
       `INSERT INTO users
@@ -50,8 +53,9 @@ exports.postUser = ({
 };
 
 exports.postLogin = ({ email, password }) => {
+    
   return db
-    .query(`SELECT * FROM users WHERE email = $1`, [email])
+    .query(`SELECT * FROM users WHERE LOWER(email) = LOWER($1)`, [email])
     .then(({ rows }) => {
       if (rows.length === 0 || rows[0].password !== password) {
         return Promise.reject({
