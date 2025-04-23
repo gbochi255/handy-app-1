@@ -14,6 +14,16 @@ export const getBids = (job_id) => {
     })
 }
 
+export const postABid = (job_id, amount, providerId) => {
+    const requestObject = {
+        amount: amount,
+        provider_id: providerId,
+    }
+    return api.post(`/jobs/${job_id}/bid`, requestObject)
+    .then(({data}) => {
+        return data
+    })
+}
 
 
 export const getJobs = () => {
@@ -23,11 +33,9 @@ export const getJobs = () => {
     })
 }
 
-
-
 //status values: 'open', 'accepted', 'completed', 'expired'
-export const getClientJobs = (client, status) => {
-    return api.get(`/jobs?created_by=${client}&status=${status}`)
+export const getClientJobs = (user_id, status) => {
+    return api.get(`/jobs?created_by=${user_id}&status=${status}`)
     .then(({data}) => {
         return data
     })
@@ -43,15 +51,16 @@ export const getJobByID = (job_id) => {
 }
 
 
-
+// available jobs
 export const getProviderJobs = (provider) => {
-    return api.get(`/jobs/provider/${provider}`)
+    return api.get(`/jobs/provider/${provider}?status=open`)
     .then(({data}) => {
         return data
     })
 }
 
 
+// mybids
 
 export const getProviderBids = (provider) => {
     return api.get(`/jobs/provider/${provider}/bids`)
@@ -61,7 +70,7 @@ export const getProviderBids = (provider) => {
 }
 
 
-
+// myjobs
 export const getProviderWonJobs = (provider) => {
     return api.get(`/jobs/provider/${provider}/won`)
     .then(({data}) => {

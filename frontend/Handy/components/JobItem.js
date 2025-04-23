@@ -39,10 +39,10 @@ export default function JobItem({
               <Text style={styles.jobTitle}>{summary}</Text>
               <Text style={styles.postedDate}>{target_date}</Text>
             </View>
-            <View style={styles.rightContent}>
+            {/* <View style={styles.rightContent}>
               <Text style={styles.distanceLabel}>Location</Text>
               <Text style={styles.distanceValue}>{location}</Text>
-            </View>
+            </View> */}
 
           </View>
         </Card.Content>
