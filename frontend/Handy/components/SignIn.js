@@ -41,7 +41,8 @@ export default function SignIn() {
     loginUser(username,password)
       .then((res) => { 
         setUserData(res);
-        navigation.navigate("CustomerHomepage");
+        if(res.is_provider){navigation.navigate("ProviderHomepage")} else {navigation.navigate("CustomerHomepage")}
+ 
         
       })
       .catch((err) => {
