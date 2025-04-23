@@ -27,7 +27,7 @@ export default function SignUp() {
   const { userData, setUserData } = useContext(UserContext);
 
   function handleSubmit() {
-    const { firstName, lastName, email, password, postcode, region, bio } =
+    const { firstName, lastName, email, password, postcode, county, city, bio } =
       userData;
     if (
       !firstName ||
@@ -35,7 +35,8 @@ export default function SignUp() {
       !email ||
       !password ||
       !postcode ||
-      !region ||
+      !county ||
+      !city ||
       !bio ||
       !photoUrl
     ) {
@@ -169,7 +170,7 @@ export default function SignUp() {
 
             <View style={styles.readOnlyInput}>
               <Text style={styles.readOnlyText}>
-                {userData.region || "*** City ***"}
+                {userData.city || "*** City ***"}
               </Text>
             </View>
 

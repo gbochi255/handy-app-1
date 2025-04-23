@@ -34,8 +34,8 @@ export const getJobs = () => {
 }
 
 //status values: 'open', 'accepted', 'completed', 'expired'
-export const getClientJobs = (client, status) => {
-    return api.get(`/jobs?created_by=${client}&status=${status}`)
+export const getClientJobs = (user_id, status) => {
+    return api.get(`/jobs?created_by=${user_id}&status=${status}`)
     .then(({data}) => {
         return data
     })
@@ -114,6 +114,8 @@ export const loginUser = (email, password) => {
         return data
     })
 }
+
+
 
 export const registerUser = (
     firstname, lastname, email, password, postcode, address, city, avatar_url, about_me, longitude, latitude

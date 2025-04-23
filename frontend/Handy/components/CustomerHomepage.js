@@ -13,17 +13,18 @@ import { useContext } from "react";
 import { UserContext } from "./UserContext";
 import { useEffect, useState } from "react";
 import JobItem from "./JobItem";
-import { getJobs } from "../utils/api";
+import { getClientJobs } from "../utils/api";
 
 export default function CustomerHomepage() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const { userData } = useContext(UserContext);
-  const loggedIn = userData.isProvider;
+  console.log(userData, '<--userData in CustomerHomepage')
+  const loggedIn = true  // userData.is_provider;
 
   useEffect(() => {
-    getJobs()
+    getClientJobs(userData.user_id, 'open')
       .then((jobObjects) => {
         setJobs(jobObjects.jobs);
         setLoading(false);
