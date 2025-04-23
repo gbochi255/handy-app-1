@@ -142,7 +142,24 @@ export const acceptBid = (job_id, bid_id) => {
 // .post(jobController.createJob)
 
 
+export const postJob = (summary, job_detail, category, created_by, target_date, photo_url, postcode) => {
+    const requestObject = {
+        summary,
+        job_detail,
+        category,
+        created_by,
+        target_date,
+        photo_url,
+        postcode
+    }
+    return api.post(`/jobs/create`, requestObject)
+    .then(({data}) => {
+        return data
+    })
+}
+
 
 // userRouter
 // .route("/:user_id")
 // .patch(userController.patchProviderStatus)
+
