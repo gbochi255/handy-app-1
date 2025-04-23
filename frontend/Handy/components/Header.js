@@ -15,10 +15,7 @@ export default function Header() {
   );
 
   const profileImage = (
-    <Image
-      source={require("../assets/defaultProfile.png")}
-      style={styles.profileIcon}
-    />
+    <Image source={{ uri: userData.avatar_url }} style={styles.profileIcon} />
   );
 
   const handleLogoPress = () => {
@@ -45,7 +42,7 @@ export default function Header() {
         <Image source={require("../assets/logo.jpg")} style={styles.logo} />
       </TouchableOpacity>
 
-      {!userData.token ? defaultImage : profileImage}
+      {!userData.email ? defaultImage : profileImage}
     </View>
   );
 }

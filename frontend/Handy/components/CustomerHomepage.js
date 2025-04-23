@@ -7,26 +7,26 @@ import {
   Button,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "./Header";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
 import { useEffect, useState } from "react";
-import testJobData from "../assets/testJobData";
 import JobItem from "./JobItem";
+import { getClientJobs } from "../utils/api";
 
 export default function CustomerHomepage() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const { userData } = useContext(UserContext);
-  const loggedIn = userData.isProvider;
+  console.log(userData, '<--userData in CustomerHomepage')
+  const isProvider = userData.is_provider;
 
   useEffect(() => {
-    fetch("https://handy-rpx6.onrender.com/jobs")
-      .then((res) => res.json())
-      .then((data) => {
-        setJobs(data.jobs);
+    getClientJobs(userData.user_id, 'open')
+      .then((jobObjects) => {
+        setJobs(jobObjects.jobs);
         setLoading(false);
       })
       .catch((err) => {
@@ -34,11 +34,10 @@ export default function CustomerHomepage() {
         setLoading(false);
       });
   }, []);
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header />
-      {loggedIn ? (
+      {isProvider ? (
         <View style={styles.navbarButtonContainer}>
           <View style={styles.providerButton}>
             <Button

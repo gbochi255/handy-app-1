@@ -10,15 +10,19 @@ exports.postUser = ({
   postcode,
   about_me,
   avatar_url,
+  is_provider,
   latitude,
   longitude
 }) => {
 
+  // standardise email to lowercase to prevent login issues
+  email = email.toLowerCase();
+
   return db
     .query(
       `INSERT INTO users
-    (email, password, firstname, lastname, address, city, postcode, about_me, avatar_url, location)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9,ST_SetSRID(ST_MakePoint($10, $11),4326)) RETURNING *, ST_AsText(location) AS location_wkt;`,
+    (email, password, firstname, lastname, address, city, postcode, about_me, avatar_url, is_provider, location)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,ST_SetSRID(ST_MakePoint($11, $12),4326)) RETURNING *, ST_AsText(location) AS location_wkt;`,
       [
         email,
         password,
@@ -29,6 +33,7 @@ exports.postUser = ({
         postcode,
         about_me,
         avatar_url,
+        is_provider,
         longitude,
         latitude
       ]
@@ -48,8 +53,9 @@ exports.postUser = ({
 };
 
 exports.postLogin = ({ email, password }) => {
+    
   return db
-    .query(`SELECT * FROM users WHERE email = $1`, [email])
+    .query(`SELECT * FROM users WHERE LOWER(email) = LOWER($1)`, [email])
     .then(({ rows }) => {
       if (rows.length === 0 || rows[0].password !== password) {
         return Promise.reject({

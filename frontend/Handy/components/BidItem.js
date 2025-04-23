@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, TouchableHighlight } from "react-native";
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableHighlight,
+  TouchableOpacity,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Card } from "react-native-paper";
 
@@ -11,8 +18,18 @@ export default function BidItem({
 }) {
   const navigation = useNavigation();
 
+  function handleBids(decision) {}
+
+  const handlePress = () => {
+    console.log(
+      `Navigating to BidPage with bidId: ${bid_id}, jobId: ${job_id}`
+    );
+
+    navigation.navigate("BidPage", { bidId: bid_id, jobId: job_id });
+  };
+
   return (
-    <Card style={styles.card} onPress={() => navigation.navigate("BidPage")}>
+    <Card style={styles.card} onPress={handlePress}>
       <Card.Content>
         <View style={styles.row}>
           <View style={styles.leftContent}>
@@ -28,6 +45,21 @@ export default function BidItem({
           <View style={styles.rightContent}>
             <Text style={styles.dateLabel}>Bid Date</Text>
             <Text style={styles.dateValue}>{created_at}</Text>
+          </View>
+          <View style={styles.actionButtons}>
+            <TouchableOpacity
+              style={styles.rejectButton}
+              onPress={() => handleBid("reject")}
+            >
+              <Text style={styles.buttonText}>Reject</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.acceptButton}
+              onPress={() => handleBid("accept")}
+            >
+              <Text style={styles.buttonText}>Accept</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Card.Content>
@@ -77,5 +109,30 @@ const styles = StyleSheet.create({
   dateValue: {
     fontSize: 14,
     fontWeight: "bold",
+  },
+  actionButtons: {
+    flexDirection: "row",
+    marginLeft: 10,
+    gap: 8,
+  },
+
+  rejectButton: {
+    backgroundColor: "#FF3B30", // red
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+  },
+
+  acceptButton: {
+    backgroundColor: "#34C759", // green
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+  },
+
+  buttonText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 14,
   },
 });
