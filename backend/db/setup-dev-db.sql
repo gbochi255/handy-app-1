@@ -36,7 +36,7 @@ CREATE TABLE jobs (
     summary VARCHAR(255) NOT NULL,
     job_detail TEXT,
     category VARCHAR(50),
-    created_by INTEGER NOT NULL REFERENCES users(user_id),
+    created_by INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     status job_status DEFAULT 'open',
     accepted_bid INTEGER,
     date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -52,9 +52,9 @@ CREATE INDEX jobs_status_idx ON jobs (status);
 -- Bids table
 CREATE TABLE bids (
     bid_id SERIAL PRIMARY KEY,
-    job_id INTEGER NOT NULL REFERENCES jobs(job_id),
+    job_id INTEGER NOT NULL REFERENCES jobs(job_id) ON DELETE CASCADE,
     amount DECIMAL(10, 2) NOT NULL,
-    provider_id INTEGER NOT NULL REFERENCES users(user_id),
+    provider_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     status bid_status DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
