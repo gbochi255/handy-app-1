@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
 import { useEffect } from "react";
-
+import { loginUser } from "../utils/api";
 export default function SignIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -53,23 +53,23 @@ export default function SignIn() {
 
     navigation.navigate("CustomerHomepage");
 
-    // axios
-    //   .post("url/login", {
-    //     username,
-    //     password,
-    //   })
-    //   .then((res) => {
-    //     setUserData({
-    //       ...userData,
-    //       token: res.data.user.token,
-    //     });
-    //     navigation.navigate("CustomerHomepage");
-    //   })
-    //   .catch((err) => {
-    //     Alert.alert("Login failed");
-    //   });
+    loginUser(username,password)
+      .then((res) => {
+        console.log(res);
+        
+        setUserData({
+          ...userData,
+          token: res.data.user.token,
+        });
+        navigation.navigate("CustomerHomepage");
+      
+      })
+      .catch((err) => {
+        Alert.alert("Login failed");
+      });
   }
 
+  console.log("From signin page <<<<<<")
   return (
     <View style={styles.container}>
       <Image source={require("../assets/logo.jpg")} style={styles.logo} />
