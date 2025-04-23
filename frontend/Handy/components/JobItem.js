@@ -20,7 +20,6 @@ export default function JobItem({
     console.log(`Navigating to ${destination} with jobId: ${job_id}`);
     navigation.navigate(destination, { jobId: job_id });
   };
-
   return (
     <TouchableOpacity onPress={handlePress} activeOpacity={0.7}>
       <Card
