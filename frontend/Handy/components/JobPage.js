@@ -25,7 +25,7 @@ export default function JobPage({ job_id }) {
       <View style={styles.container}>
         <SafeAreaView>
           <FlatList
-            data={testBidData} // an array of bid objects
+            data={testBidData} 
             keyExtractor={(item) => item.bid_id.toString()}
             renderItem={({ item }) => (
               <BidItem
