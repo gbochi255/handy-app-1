@@ -18,7 +18,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
 import axios from "axios";
-
+import { registerUser } from "../utils/api";;
 export default function SignUp() {
   const navigation = useNavigation();
   const route = useRoute();
@@ -27,7 +27,7 @@ export default function SignUp() {
   const { userData, setUserData } = useContext(UserContext);
 
   function handleSubmit() {
-    const { firstName, lastName, email, password, postcode, region, bio } =
+    const { firstName, lastName, email, password, postcode, county, city, bio } =
       userData;
     if (
       !firstName ||
@@ -35,7 +35,8 @@ export default function SignUp() {
       !email ||
       !password ||
       !postcode ||
-      !region ||
+      !county ||
+      !city ||
       !bio ||
       !photoUrl
     ) {
@@ -43,38 +44,38 @@ export default function SignUp() {
       return;
     }
 
-    // axios
-    //   .post(`/url/register`, {
-    //     firstName: userData.firstName,
-    //     lastName: userData.lastName,
-    //     email: userData.email,
-    //     password: userData.password,
-    //     postcode: userData.postcode,
-    //     region: userData.region,
-    //     long: userData.long,
-    //     lat: userData.lat,
-    //     bio: userData.bio,
-    //     photoUrl: photoUrl,
-    //     isProvider: userData.isProvider,
-    //   })
-    //   .then(() => {
-    //     setUserData({
-    //       firstName: "",
-    //       lastName: "",
-    //       email: "",
-    //       password: "",
-    //       postcode: "",
-    //       region: "",
-    //       long: "",
-    //       lat: "",
-    //       bio: "",
-    //       photoUrl: null,
-    //       isProvider: false,
-    //     });
-    //   })
-    //   .then((err) => {
-    //     console.log("post error!");
-    //   });
+     registerUser( 
+        userData.firstName,
+        userData.lastName,
+        userData.email,
+        userData.password,
+        userData.postcode,
+        userData.county,
+        userData.city,
+        photoUrl,
+        userData.bio,
+        userData.long,
+        userData.lat,
+        userData.isProvider,
+      )
+      .then(() => {
+        setUserData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+          postcode: "",
+          region: "",
+          long: "",
+          lat: "",
+          bio: "",
+          photoUrl: null,
+          isProvider: false,
+        });
+      })
+      .then((err) => {
+        console.log("post error!");
+      });
 
     Alert.alert("Account created");
     navigation.navigate("SignIn");
@@ -86,14 +87,15 @@ export default function SignUp() {
         `https://api.geoapify.com/v1/postcode/search?postcode=${userData.postcode}&countrycode=gb&apiKey=d779b7f845cb429d96619e265d148015`
       )
       .then(({ data }) => {
-        console.log(data.features[0].properties.city);
-        console.log(data.features[0].properties.county);
-        console.log(data.features[0].properties.lon);
-        console.log(data.features[0].properties.lat);
+        // console.log(data.features[0].properties.city);
+        // console.log(data.features[0].properties.county);
+        // console.log(data.features[0].properties.long);
+        // console.log(data.features[0].properties.lat);
 
         setUserData({
           ...userData,
-          region: data.features[0].properties.city, // try this data.features[0].properties.county maybe? I got Manchester instead of Rochdale
+          city: data.features[0].properties.city, 
+          county: data.features[0].properties.county,
           long: data.features[0].properties.lon,
           lat: data.features[0].properties.lat,
         });
@@ -168,7 +170,7 @@ export default function SignUp() {
 
             <View style={styles.readOnlyInput}>
               <Text style={styles.readOnlyText}>
-                {userData.region || "*** City ***"}
+                {userData.city || "*** City ***"}
               </Text>
             </View>
 
