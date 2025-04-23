@@ -1,3 +1,4 @@
+import React from "react";
 import {
   StyleSheet,
   Text,
@@ -19,8 +20,16 @@ export default function BidItem({
 
   function handleBids(decision) {}
 
+  const handlePress = () => {
+    console.log(
+      `Navigating to BidPage with bidId: ${bid_id}, jobId: ${job_id}`
+    );
+
+    navigation.navigate("BidPage", { bidId: bid_id, jobId: job_id });
+  };
+
   return (
-    <Card style={styles.card} onPress={() => navigation.navigate("BidPage")}>
+    <Card style={styles.card} onPress={handlePress}>
       <Card.Content>
         <View style={styles.row}>
           <View style={styles.leftContent}>
