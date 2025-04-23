@@ -25,7 +25,7 @@ export default function CustomerHomepage() {
   useEffect(() => {
     getJobs()
       .then((jobObjects) => {
-        setJobs(jobObjects);
+        setJobs(jobObjects.jobs);
         setLoading(false);
       })
       .catch((err) => {
@@ -33,7 +33,6 @@ export default function CustomerHomepage() {
         setLoading(false);
       });
   }, []);
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header />

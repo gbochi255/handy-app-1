@@ -35,7 +35,7 @@ export default function App() {
           <Stack.Screen name="CustomerHomepage" component={CustomerHomepage} />
           <Stack.Screen name="ProviderHomepage" component={ProviderHomepage} />
           <Stack.Screen name="ProviderJobDetailsPage" component={ProviderJobDetailsPage} />
-          {/* <Stack.Screen name="JobItem" component={JobItem} /> */}
+          <Stack.Screen name="JobItem" component={JobItem} />
           <Stack.Screen name="JobPage" component={JobPage} />
           <Stack.Screen name="BidItem" component={BidItem} />
           <Stack.Screen name="BidPage" component={BidPage} />
