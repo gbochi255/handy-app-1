@@ -40,6 +40,8 @@ export default function SignIn() {
 
     loginUser(username,password)
       .then((res) => { 
+        console.log(res);
+        
         setUserData(res);
         navigation.navigate("CustomerHomepage");
         
