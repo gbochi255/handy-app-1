@@ -127,7 +127,7 @@ export const loginUser = (email, password) => {
 
 
 export const registerUser = (
-    firstname, lastname, email, password, postcode, address, city, avatar_url, about_me, longitude, latitude
+    firstname, lastname, email, password, postcode, address, city, avatar_url, about_me, longitude, latitude, isProvider
 ) => {
     const requestObject = {
         firstname,
@@ -140,7 +140,8 @@ export const registerUser = (
         avatar_url,
         about_me,
         longitude,
-        latitude
+        latitude,
+        isProvider
     }
     return api.post('/register', requestObject)
     .then(({data}) => {
