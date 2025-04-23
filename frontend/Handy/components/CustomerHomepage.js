@@ -7,13 +7,13 @@ import {
   Button,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "./Header";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
 import { useEffect, useState } from "react";
-import testJobData from "../assets/testJobData";
 import JobItem from "./JobItem";
+import { getJobs } from "../utils/api";
 
 export default function CustomerHomepage() {
   const [jobs, setJobs] = useState([]);
@@ -22,23 +22,21 @@ export default function CustomerHomepage() {
   const { userData } = useContext(UserContext);
   const loggedIn = userData.isProvider;
 
-  // useEffect(() => {
-  //   fetch("OUR END POINT/jobs")
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setJobs(data);
-  //       setLoading(false);
-  //     })
-  //     .catch((err) => {
-  //       console.error("Failed to fetch jobs:", err);
-  //       setLoading(false);
-  //     });
-  // }, []);
+  useEffect(() => {
+    getJobs()
+      .then((jobObjects) => {
+        setJobs(jobObjects);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch jobs:", err);
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header />
-      {/* <Navbar /> */}
       {loggedIn ? (
         <View style={styles.navbarButtonContainer}>
           <View style={styles.providerButton}>
@@ -51,45 +49,26 @@ export default function CustomerHomepage() {
       ) : null}
 
       <View style={styles.contentContainer}>
-        <FlatList
-          data={testJobData}
-          renderItem={({ item }) => (
-            <JobItem
-              job_id={item.job_id}
-              summary={item.summary}
-              job_detail={item.job_detail}
-              created_by={item.created_by}
-              status={item.status}
-              photo_url={item.photo_url}
-              target_date={item.target_date}
-              location={item.location}
-            />
-          )}
-          keyExtractor={(item) => item.job_id}
-        />
-
-        {/* <View style={styles.contentContainer}>
-          {loading ? (
-            <Text>Loading jobs...</Text>
-          ) : (
-            <FlatList
-              data={jobs}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => (
-                <JobItem
-                  job_id={item.job_id}
-                  summary={item.summary}
-                  job_detail={item.job_detail}
-                  created_by={item.created_by}
-                  status={item.status}
-                  photo_url={item.photo_url}
-                  target_date={item.target_date}
-                  location={item.location}
-                />
-              )}
-            />
-          )}
-        </View> */}
+        {loading ? (
+          <Text>Loading jobs...</Text>
+        ) : (
+          <FlatList
+            data={jobs}
+            keyExtractor={(item) => item.job_id.toString()}
+            renderItem={({ item }) => (
+              <JobItem
+                job_id={item.job_id}
+                summary={item.summary}
+                job_detail={item.job_detail}
+                created_by={item.created_by}
+                status={item.status}
+                photo_url={item.photo_url}
+                target_date={item.target_date}
+                location={item.location}
+              />
+            )}
+          />
+        )}
       </View>
 
       <TouchableOpacity

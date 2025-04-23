@@ -14,10 +14,6 @@ exports.postUser = ({
   longitude
 }) => {
 
-  console.log("User obj:", email, latitude, longitude)
-// const location=`ST_PointFromText('POINT(${longitude} ${latitude})', 4326)`
-// console.log("location: ", location)
-
   return db
     .query(
       `INSERT INTO users
@@ -41,7 +37,6 @@ exports.postUser = ({
       return rows[0];
     })
     .catch((error) => {
-      console.log(error)
       if (error.code === '23505') { // PostgreSQL unique violation
         return Promise.reject({
           status: 409,

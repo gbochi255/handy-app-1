@@ -18,7 +18,6 @@ exports.fetchJobs = ( created_by, status ) => {
 }
 
 exports.fetchClientJobs = (client_id, status) => {
-    console.log("Running fetchClientJobs");
   
     let validateClient = Promise.resolve();
     if (client_id) {
@@ -60,13 +59,11 @@ exports.fetchClientJobs = (client_id, status) => {
         return db.query(queryStr, [...queryParams]);
       })
       .then(({ rows }) => {
-        console.log("returned:", rows.length);
         return rows;
       });
   };
 
   exports.fetchProviderJobs = (user_id, distance = 10, status) => {
-    console.log("Running fetchProviderJobs");
   
     return checkUserExists(user_id, true)
       .then(() => {
@@ -111,13 +108,11 @@ exports.fetchClientJobs = (client_id, status) => {
         return db.query(queryStr, queryParams);
       })
       .then(({ rows }) => {
-        console.log("returned:", rows.length);
         return rows;
       });
   };
 
   const fetchProviderJobsWithBids = (provider_id, additionalSelect = '', whereConditions) => {
-    console.log(`Running fetchProviderJobsWithBids for provider_id: ${provider_id}`);
   
     return checkUserExists(provider_id, true)
       .then(() => {
@@ -143,7 +138,6 @@ exports.fetchClientJobs = (client_id, status) => {
         return db.query(queryStr, queryParams);
       })
       .then(({ rows }) => {
-        console.log("returned:", rows.length);
         return rows;
       });
   };
@@ -178,21 +172,35 @@ exports.fetchClientJobs = (client_id, status) => {
 
 
   exports.postJob = (jobData) => {
-    console.log("Running postJob")
-    const queryParams=[jobData.summary, jobData.job_detail, jobData.category, jobData.created_by, jobData.photo_url, jobData.target_date, jobData.location]
+    const queryParams=[
+      jobData.summary, 
+      jobData.job_detail, 
+      jobData.category, 
+      jobData.created_by, 
+      jobData.photo_url, 
+      jobData.target_date, 
+    ]
     
     const queryStr=`
     INSERT INTO jobs (
-      summary, job_detail, category, created_by, photo_url, target_date, location) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7) 
-    RETURNING *
-      `
+      summary, job_detail, category, created_by, photo_url, target_date, location
+    )
+    SELECT $1, $2, $3, $4, $5, $6, location
+    FROM users
+    WHERE user_id = $4
+    RETURNING *, ST_AsText(location) AS location_wkt;
+  `;
 
     return db.query(queryStr, queryParams)
     .then(({ rows }) => {
-        return rows[0];
-        })
-
+      if (rows.length === 0) {
+        return Promise.reject({
+          status: 404,
+          message: "User not found or no location set",
+        });
+      }
+      return rows[0];
+    })
   }
 
   exports.updateJobComplete = (job_id) => {
@@ -234,7 +242,6 @@ exports.updateBidAccept = (job_id, bid_id) => {
     return db.query(queryStr, [job_id, bid_id])
         .then(({ rows }) => {
             if (rows.length === 0) {
-              console.log(rows)
                 return Promise.reject({
                     status: 404,
                     message: 'Job Not found',
@@ -249,4 +256,48 @@ exports.updateBidAccept = (job_id, bid_id) => {
             }
             return rows;
         })
+}
+
+
+exports.fetchJobByID = (job_id) => {
+
+  let queryStr = `
+  SELECT *, ST_AsText(location) AS location_wkt
+  FROM jobs
+  WHERE job_id = $1;
+`;
+
+  return db.query(queryStr, [job_id]).then(({rows})=>{
+    if (rows.length === 0) {
+      return Promise.reject({
+        status: 404,
+        message: "Job_id not found",
+      });
+    }
+
+    return rows[0]
+  })
+
+}
+
+exports.insertBid = (bidData) => {
+  const {job_id, amount, provider_id} = bidData
+
+  if (!job_id || !amount || !provider_id) {
+    return Promise.reject({status: 400, message: "Missing required parameters {amount:, provider_id:}"})
+  }
+
+  const queryStr=`INSERT INTO bids (job_id, amount, provider_id)
+    VALUES ($1, $2, $3)
+    RETURNING *;
+  `;
+
+  const queryParams=[job_id, amount, provider_id]
+
+  return db.query(queryStr,queryParams).then(({rows})=>{
+    const bid=rows[0]
+    bid.amount=parseFloat(bid.amount)
+    return bid
+  })
+
 }

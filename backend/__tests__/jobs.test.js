@@ -1,7 +1,6 @@
 const supertest = require("supertest");
 const db = require("../db/connection");
 const app = require("../app");
-const { response } = require("express");
 require("jest-sorted");
 // const seed = require("../db/seed/merged-seed.sql")
 
@@ -217,7 +216,6 @@ describe("GET /jobs/provider/provider_id", () => {
         .expect(404)
         .then(response => {
             const { body } = response;
-            console.log(body)
             expect(body.message).toBe( "User is not a provider" );
             expect(body.status).toBe( 404 );
         });
@@ -229,7 +227,6 @@ describe("GET /jobs/provider/provider_id", () => {
         .expect(400)
         .then(response => {
           const { body } = response;
-          console.log(body)
           expect(body.message).toBe( "Invalid status value" );
           expect(body.status).toBe( 400 );
 
@@ -242,7 +239,6 @@ describe("GET /jobs/provider/provider_id", () => {
         .expect(400)
         .then(response => {
           const { body } = response;
-          console.log(body)
           expect(body.message).toBe( "Distance must be a positive number" );
           expect(body.status).toBe( 400 );
         });
@@ -256,7 +252,6 @@ describe("GET /jobs/provider/provider_id", () => {
         .expect(200)
         .then(response => {
           const jobs = response.body.jobs;
-          console.log(jobs)
           const waitingJobs = jobs.filter(job => job.bid_status === "Waiting");
           expect(waitingJobs).toHaveLength(2); // job_id=1, 7 (both open)
           waitingJobs.forEach(job => {
@@ -333,7 +328,6 @@ describe("GET /jobs/provider/provider_id", () => {
           .expect(400)
           .then(response => {
             const body=response.body
-            console.log ("error: ",body)
             expect(body.message).toBe( "Bad request");
           });
       });
@@ -435,6 +429,7 @@ describe("POST /jobs", ()=>{
       expect(job.job_detail).toBe("Details about my new task")
       expect(job.category).toBe("Plumbing")
       expect(job.target_date).toBe("2025-04-30")
+      expect(job.location_wkt).toBe('POINT(-2.241 53.474)');
       expect(job.photo_url).toBe("https://supabase.co/storage/v1/object/public/jobs/tap.jpg")
     })
 
@@ -451,8 +446,28 @@ describe("POST /jobs", ()=>{
       expect(body.status).toBe(400)
       expect(body.message).toBe("Required paramaters missing from body")
       })  
+  })
 
-})
+  test("404: user_id not found or location not set",() =>{
+    return supertest(app)
+    .post("/jobs/create")
+    .send({
+      "created_by": 9999,
+      "summary": "No such user",
+      "job_detail": "Details about my new task",
+      "category": "Plumbing",
+      "target_date": "2025-04-30",
+      "photo_url": "https://supabase.co/storage/v1/object/public/jobs/tap.jpg",
+      "postcode": "E1 6AN"
+    })
+    .expect(404)
+    .then(response=>{
+      body=response.body
+      expect(body.status).toBe(404)
+      expect(body.message).toBe("User not found or no location set")
+      })  
+  })
+
 })
 describe("PATCH: /jobs/:job_id/complete", () => {
   test("200: Respond with updated job object", () => {
@@ -534,5 +549,86 @@ describe("PATCH: /jobs/:job_id/accept/:bid_id", () => {
           const { body } = response;
           expect(body.message).toBe("Bid Not found")
       })
+  })
+})
+
+describe("GET /jobs/:job_id", ()=>{
+  test("200: return all details for a specific job", ()=>{
+    return supertest(app)
+    .get("/jobs/1")
+    .expect(200)
+    .then(response => {
+      const job = response.body
+      expect(job.job_id).toBe(1)
+      expect(job.summary).toBe("Fix kitchen sink")
+      expect(job.job_detail).toBe("Leaking pipe under kitchen sink needs repair.")
+      expect(job.category).toBe("Plumbing")
+      expect(job.created_by).toBe(1)
+      expect(job.status).toBe("open")
+      expect(job.target_date).toBe("2025-04-25")
+      expect(job.photo_url).toBe("https://example.com/photos/sink.jpg")
+      expect(job.location_wkt).toBe("POINT(-2.241 53.474)")
+    })
+  } )
+  test("404: job not found", ()=>{
+    return supertest(app)
+    .get("/jobs/9999")
+    .expect(404)
+    .then(response => {
+      const error = response.body
+      expect(error.status).toBe(404)
+      expect(error.message).toBe("Job_id not found")
+    })
+  } )
+})
+
+
+describe("POST /jobs/:job_id/bid", ()=>{
+  test("200: Creates a bid and returns it", ()=>{
+    return supertest(app)
+    .post("/jobs/2/bid")
+    .send({
+      "provider_id": 42,
+      "amount": 45.00
+    })
+    .expect(200)
+    .then(response => {
+      const bid=response.body
+      expect(bid).toHaveProperty("bid_id")
+      expect(bid).toHaveProperty("created_at")
+      expect(bid.job_id).toBe(2)
+      expect(bid.provider_id).toBe(42)
+      expect(bid.amount).toBe(45.00)
+      expect(bid.status).toBe("pending")
+    })
+  })
+  test("400: Inavlid body parameters", ()=>{
+    return supertest(app)
+    .post("/jobs/2/bid")
+    .send({
+      "not_a_user": 42,
+      "money": 45.00
+    })
+    .expect(400)
+    .then(response => {
+      const error=response.body
+      expect(error.status).toBe(400)
+      expect(error.message).toBe("Missing required parameters {amount:, provider_id:}")
+    })
+  })
+  test("404: Non-existant job_id", ()=>{
+    return supertest(app)
+    .post("/jobs/9999/bid")
+    .send({
+      "provider_id": 42,
+      "amount": 45.00
+    })
+    .expect(404)
+    .then(response => {
+      const bid=response.body
+      const error=response.body
+      expect(error.status).toBe(404)
+      expect(error.message).toBe("Not found")
+    })
   })
 })

@@ -43,6 +43,7 @@ export default function JobItem({
               <Text style={styles.distanceLabel}>Location</Text>
               <Text style={styles.distanceValue}>{location}</Text>
             </View>
+
           </View>
         </Card.Content>
       </Card>
