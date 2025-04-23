@@ -11,8 +11,7 @@ import { getProviderWonJobs, getProviderBids, getProviderJobs } from '../utils/a
 
 export default function ProviderHomepage() {
   const navigation = useNavigation();
-  const { userData } = useContext(UserContext);
-
+  const { userData, setUserData } = useContext(UserContext);
 
   const [activeTab, setActiveTab] = useState('Available'); 
 
@@ -30,15 +29,15 @@ export default function ProviderHomepage() {
         setLoading(true);
 
        
-        const myJobsResponse = await getProviderWonJobs(43);
+        const myJobsResponse = await getProviderWonJobs(userData.user_id);
         setMyJobs(myJobsResponse.jobs || []);
 
         
-        const myBidsResponse = await getProviderBids(43);
+        const myBidsResponse = await getProviderBids(userData.user_id);
         setMyBids(myBidsResponse.jobs || []);
 
         
-        const availableJobsResponse = await getProviderJobs(43);
+        const availableJobsResponse = await getProviderJobs(userData.user_id);
         setAvailableJobs(availableJobsResponse.jobs || []);
 
       } catch (error) {

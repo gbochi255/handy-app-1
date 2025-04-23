@@ -81,23 +81,26 @@ export default function PostJob() {
   };
 
   const handleSubmit = async () => {
-    const userId = userData?.email;
+    // const userId = userData?.email;
     const jobData = {
-      userId,
+      created_by: 43,
       summary,
-      jobDetail,
-      date: date.toISOString(),
-      photoUrl,
+      job_detail: jobDetail,
+      target_date: date.toISOString(),
+      photo_url: photoUrl,
+      category: "gardening",
+      postcode: userData.postcode
     };
 
     try {
-      const response = await axios.post('https://api-url/jobs', jobData, {
+      const response = await axios.post('https://handy-rpx6.onrender.com/jobs/create', jobData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
       Alert.alert('Success', 'Job posted successfully!');
+      console.log(jobData, "jobData <<<<")
       console.log('API response:', response.data);
       setSummary('');
       setJobDetail('');
@@ -105,6 +108,7 @@ export default function PostJob() {
       setPhotoUri(null);
       setPhotoUrl(null);
     } catch (error) {
+      console.log(jobData, "jobData <<<<")
       Alert.alert('Error', 'Failed to post job. Please try again.');
       console.error('Error posting job:', error);
     }

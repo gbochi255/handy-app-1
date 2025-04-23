@@ -40,6 +40,8 @@ export default function SignIn() {
 
     loginUser(username,password)
       .then((res) => { 
+        console.log(res);
+        
         setUserData(res);
         if(res.is_provider){navigation.navigate("ProviderHomepage")} else {navigation.navigate("CustomerHomepage")}
  
