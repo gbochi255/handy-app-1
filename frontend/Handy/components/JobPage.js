@@ -26,7 +26,7 @@ export default function JobPage({ route }) {
       try {
         setLoading(true);
 
-        const { bids } = await getBids(job_id);
+        const bids = await getBids(job_id);
         setBids(bids || []);
       } catch (error) {
         console.error("Error fetching jobs:", error);
@@ -58,7 +58,10 @@ export default function JobPage({ route }) {
       <SafeAreaView>
         <FlatList
           data={bids.filter(
-            (bid) => bid.status === "open" || bid.status === "accepted"
+            (bid) =>
+              bid.status === "pending" ||
+              bid.status === "open" ||
+              bid.status === "accepted"
           )}
           keyExtractor={(item) => item.bid_id.toString()}
           renderItem={({ item }) => (
