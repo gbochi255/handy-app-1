@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View, Image, FlatList } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import testBidData from "../assets/testBidData";
+
+import { getBids } from "../utils/api";
 import BidItem from "./BidItem";
 
 import Header from "./Header";
@@ -16,7 +18,25 @@ export default function JobPage({ route }) {
     target_date,
     location,
   } = route.params;
-
+  const [bids, setBids] = useState([])
+  // Fetch data when activeTab changes
+    useEffect(() => {
+      const fetchBidsByJobId = async (jobId) => {
+        try {
+          setLoading(true);
+  
+          const bids = await getBids(jobId);
+          setBids(bids || []);
+  
+        } catch (error) {
+          console.error('Error fetching jobs:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchBidsByJobId(job_id);
+    }, [job_id]);
   return (
     <View>
       <Header />
@@ -36,16 +56,18 @@ export default function JobPage({ route }) {
 
       <SafeAreaView>
         <FlatList
-          data={testBidData}
+          data={bids}
           keyExtractor={(item) => item.bid_id.toString()}
           renderItem={({ item }) => (
             <BidItem
               bid_id={item.bid_id}
-              job_id={item.job_id}
               amount={item.amount}
-              provider_id={item.provider_id}
               status={item.status}
               created_at={item.created_at}
+              avatar_url={avatar_url}
+              firstName={pr_firstname}
+              lastName={pr.lastname}
+              providerId={providerId}
             />
           )}
         />
