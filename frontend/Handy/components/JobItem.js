@@ -1,7 +1,7 @@
-import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Card } from 'react-native-paper';
+import React from "react";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { Card } from "react-native-paper";
 
 export default function JobItem({
   job_id,
@@ -12,20 +12,27 @@ export default function JobItem({
   photo_url,
   target_date,
   location,
-  destination = 'JobPage',
+  destination = "JobPage",
 }) {
   const navigation = useNavigation();
 
   const handlePress = () => {
     console.log(`Navigating to ${destination} with jobId: ${job_id}`);
-    navigation.navigate(destination, { jobId: job_id });
+    navigation.navigate("JobPage", {
+      job_id,
+      summary,
+      job_detail,
+      created_by,
+      status,
+      photo_url,
+      target_date,
+      location,
+    });
   };
+
   return (
     <TouchableOpacity onPress={handlePress} activeOpacity={0.7}>
-      <Card
-        style={styles.card}
-        onPress={handlePress}
-      >
+      <Card style={styles.card} onPress={handlePress}>
         <Card.Content>
           <View style={styles.row}>
             <Image
@@ -42,7 +49,6 @@ export default function JobItem({
               <Text style={styles.distanceLabel}>Location</Text>
               <Text style={styles.distanceValue}>{location}</Text>
             </View> */}
-
           </View>
         </Card.Content>
       </Card>
@@ -56,8 +62,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   row: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   image: {
     width: 80,
@@ -67,26 +73,26 @@ const styles = StyleSheet.create({
   },
   middleContent: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   jobTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   postedDate: {
     fontSize: 14,
-    color: 'gray',
+    color: "gray",
   },
   rightContent: {
-    justifyContent: 'center',
-    alignItems: 'flex-end',
+    justifyContent: "center",
+    alignItems: "flex-end",
   },
   distanceLabel: {
     fontSize: 12,
-    color: 'gray',
+    color: "gray",
   },
   distanceValue: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });

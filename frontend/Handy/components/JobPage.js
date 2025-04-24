@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image, FlatList } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-import testBidData from "../assets/testBidData";
+import { useEffect, useState } from "react";
 
 import { getBids } from "../utils/api";
 import BidItem from "./BidItem";
@@ -18,25 +18,26 @@ export default function JobPage({ route }) {
     target_date,
     location,
   } = route.params;
-  const [bids, setBids] = useState([])
-  // Fetch data when activeTab changes
-    useEffect(() => {
-      const fetchBidsByJobId = async (jobId) => {
-        try {
-          setLoading(true);
-  
-          const bids = await getBids(jobId);
-          setBids(bids || []);
-  
-        } catch (error) {
-          console.error('Error fetching jobs:', error);
-        } finally {
-          setLoading(false);
-        }
-      };
-  
-      fetchBidsByJobId(job_id);
-    }, [job_id]);
+  const [bids, setBids] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBidsByJobId = async (job_id) => {
+      try {
+        setLoading(true);
+
+        const { bids } = await getBids(job_id);
+        setBids(bids || []);
+      } catch (error) {
+        console.error("Error fetching jobs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBidsByJobId(job_id);
+  }, [job_id]);
+
   return (
     <View>
       <Header />
@@ -56,18 +57,21 @@ export default function JobPage({ route }) {
 
       <SafeAreaView>
         <FlatList
-          data={bids}
+          data={bids.filter(
+            (bid) => bid.status === "open" || bid.status === "accepted"
+          )}
           keyExtractor={(item) => item.bid_id.toString()}
           renderItem={({ item }) => (
             <BidItem
+              job_id={job_id}
               bid_id={item.bid_id}
               amount={item.amount}
               status={item.status}
               created_at={item.created_at}
-              avatar_url={avatar_url}
-              firstName={pr_firstname}
-              lastName={pr.lastname}
-              providerId={providerId}
+              avatar_url={item.avatar_url}
+              provider_id={item.provider_id}
+              provider_firstname={item.pr_firstname}
+              provider_lastname={item.pr_lastname}
             />
           )}
         />
