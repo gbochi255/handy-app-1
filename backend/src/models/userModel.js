@@ -17,6 +17,7 @@ exports.postUser = ({
 
   // standardise email to lowercase to prevent login issues
   email = email.toLowerCase();
+  password = password.trim()
 
   return db
     .query(
@@ -53,6 +54,9 @@ exports.postUser = ({
 };
 
 exports.postLogin = ({ email, password }) => {
+
+  email=email.trim()
+  password=password.trim()
     
   return db
     .query(`SELECT * FROM users WHERE LOWER(email) = LOWER($1)`, [email])
