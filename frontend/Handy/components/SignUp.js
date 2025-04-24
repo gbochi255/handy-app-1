@@ -18,7 +18,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
 import axios from "axios";
-import { registerUser } from "../utils/api";;
+import { registerUser } from "../utils/api";
 export default function SignUp() {
   const navigation = useNavigation();
   const route = useRoute();
@@ -27,16 +27,22 @@ export default function SignUp() {
   const { userData, setUserData } = useContext(UserContext);
 
   function handleSubmit() {
-    const { firstName, lastName, email, password, postcode, county, city, bio } =
-      userData;
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      postcode,
+      county,
+      city,
+      bio,
+    } = userData;
     if (
       !firstName ||
       !lastName ||
       !email ||
       !password ||
       !postcode ||
-      !county ||
-      !city ||
       !bio ||
       !photoUrl
     ) {
@@ -44,21 +50,22 @@ export default function SignUp() {
       return;
     }
 
-     registerUser( 
-        userData.firstName,
-        userData.lastName,
-        userData.email,
-        userData.password,
-        userData.postcode,
-        userData.county,
-        userData.city,
-        photoUrl,
-        userData.bio,
-        userData.long,
-        userData.lat,
-        userData.isProvider,
-      )
+    registerUser(
+      userData.firstName,
+      userData.lastName,
+      userData.email,
+      userData.password,
+      userData.postcode,
+      userData.county,
+      userData.city,
+      photoUrl,
+      userData.bio,
+      userData.long,
+      userData.lat,
+      userData.isProvider
+    )
       .then(() => {
+        //reset the userData
         setUserData({
           firstName: "",
           lastName: "",
@@ -94,7 +101,7 @@ export default function SignUp() {
 
         setUserData({
           ...userData,
-          city: data.features[0].properties.city, 
+          city: data.features[0].properties.city,
           county: data.features[0].properties.county,
           long: data.features[0].properties.lon,
           lat: data.features[0].properties.lat,
@@ -170,7 +177,7 @@ export default function SignUp() {
 
             <View style={styles.readOnlyInput}>
               <Text style={styles.readOnlyText}>
-                {userData.city || "*** City ***"}
+                {userData.city || userData.county || "*** City ***"}
               </Text>
             </View>
 

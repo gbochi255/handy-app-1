@@ -22,6 +22,8 @@ export default function CustomerHomepage() {
   const { userData } = useContext(UserContext);
   // console.log(userData, '<--userData in CustomerHomepage')
   const loggedIn = true  // userData.is_provider;
+  const isProvider = userData.is_provider;
+
 
   useEffect(() => {
     getClientJobs(userData.user_id, 'open')
@@ -37,7 +39,7 @@ export default function CustomerHomepage() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header />
-      {loggedIn ? (
+      {isProvider ? (
         <View style={styles.navbarButtonContainer}>
           <View style={styles.providerButton}>
             <Button

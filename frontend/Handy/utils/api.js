@@ -127,7 +127,7 @@ export const loginUser = (email, password) => {
 
 
 export const registerUser = (
-    firstname, lastname, email, password, postcode, address, city, avatar_url, about_me, longitude, latitude
+    firstname, lastname, email, password, postcode, address, city, avatar_url, about_me, longitude, latitude, is_provider
 ) => {
     const requestObject = {
         firstname,
@@ -140,7 +140,8 @@ export const registerUser = (
         avatar_url,
         about_me,
         longitude,
-        latitude
+        latitude,
+        is_provider
     }
     return api.post('/register', requestObject)
     .then(({data}) => {
@@ -148,10 +149,12 @@ export const registerUser = (
     })
 }
 
-export const becomeProvider = (user_id, isProvider) => {
-    const requestObject = { isProvider }
-    return api.patch(`/users/${user_id}`, requestObject)
-    .then(({data}) => {
-        return data
-    })
-}
+
+// MAY BE REDUDANT, CONSIDER DELETING
+// export const becomeProvider = (user_id, isProvider) => {
+//     const requestObject = { isProvider }
+//     return api.patch(`/users/${user_id}`, requestObject)
+//     .then(({data}) => {
+//         return data
+//     })
+// }

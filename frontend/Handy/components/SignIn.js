@@ -43,7 +43,8 @@ export default function SignIn() {
         // console.log(res);
         
         setUserData(res);
-        navigation.navigate("CustomerHomepage");
+        if(res.is_provider){navigation.navigate("ProviderHomepage")} else {navigation.navigate("CustomerHomepage")}
+ 
         
       })
       .catch((err) => {
