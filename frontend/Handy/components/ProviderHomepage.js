@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import JobItem from './JobItem';
@@ -13,30 +13,24 @@ export default function ProviderHomepage() {
   const navigation = useNavigation();
   const { userData, setUserData } = useContext(UserContext);
 
-  const [activeTab, setActiveTab] = useState('Available'); 
-
-
-  // State for the jobs data
+  const [activeTab, setActiveTab] = useState('Available');
   const [myJobs, setMyJobs] = useState([]);
   const [myBids, setMyBids] = useState([]);
   const [availableJobs, setAvailableJobs] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch data from the three endpoints on mount
+  // Fetch data when activeTab changes
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
 
-       
         const myJobsResponse = await getProviderWonJobs(userData.user_id);
         setMyJobs(myJobsResponse.jobs || []);
 
-        
         const myBidsResponse = await getProviderBids(userData.user_id);
         setMyBids(myBidsResponse.jobs || []);
 
-        
         const availableJobsResponse = await getProviderJobs(userData.user_id);
         setAvailableJobs(availableJobsResponse.jobs || []);
 
@@ -48,9 +42,8 @@ export default function ProviderHomepage() {
     };
 
     fetchData();
-  }, [userData.id]);
+  }, [activeTab]);
 
-  
   const displayedJobs = activeTab === 'My Jobs' ? myJobs :
                        activeTab === 'My Bids' ? myBids :
                        availableJobs;
@@ -62,10 +55,13 @@ export default function ProviderHomepage() {
       {/* Navbar section */}
       <View style={styles.navbarButtonContainer}>
         <View style={styles.customerButton}>
-          <Button
-            title="Customer"
+          <TouchableOpacity
+            style={styles.customerButtonTouchable}
             onPress={() => navigation.navigate('CustomerHomepage')}
-          />
+            activeOpacity={0.7}
+          >
+            <Text style={styles.customerButtonText}>Customer</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.providerButton}>
@@ -133,7 +129,7 @@ export default function ProviderHomepage() {
                   destination="ProviderJobDetailsPage"
                 />
               )}
-              keyExtractor={(item) => item.job_id.toString()}
+              keyExtractor={(item, index) => `${activeTab}-${item.job_id}-${index}`}
               showsVerticalScrollIndicator={false}
               ListEmptyComponent={() => (
                 <Text>No jobs to display.</Text>
@@ -154,30 +150,44 @@ const styles = StyleSheet.create({
   },
   navbarButtonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    margin: 20,
-    marginBottom: 0,
-    marginLeft: 60,
-    marginRight: 60,
-    borderColor: 'rgb(0, 0, 0)',
-    borderWidth: 2,
+    justifyContent: 'center',
+    marginVertical: 8,
+    marginHorizontal: 60,
   },
   customerButton: {
     flex: 1,
-    borderColor: 'rgb(0, 0, 0)',
-    borderWidth: 1,
   },
   providerButton: {
     flex: 1,
-    borderColor: 'rgb(0, 0, 0)',
-    borderWidth: 1,
   },
-  providerButtonTouchable: {
-    backgroundColor: '#007AFF',
+  customerButtonTouchable: {
+    backgroundColor: '#999999',
+    borderWidth: 2,
+    borderColor: '#F05A28',
     paddingVertical: 10,
-    borderRadius: 4,
+    borderTopLeftRadius: 4,
+    borderBottomLeftRadius: 4,
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
     alignItems: 'center',
     justifyContent: 'center',
+    height: 40,
+  },
+  customerButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  providerButtonTouchable: {
+    backgroundColor: '#F05A28',
+    paddingVertical: 10,
+    borderTopRightRadius: 4,
+    borderBottomRightRadius: 4,
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 40,
   },
   providerButtonText: {
     color: '#fff',
@@ -191,7 +201,7 @@ const styles = StyleSheet.create({
   },
   tabButton: {
     borderWidth: 2,
-    borderColor: '#007AFF',
+    borderColor: '#F05A28',
     borderRadius: 20,
     paddingVertical: 8,
     paddingHorizontal: 16,
@@ -199,10 +209,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   tabButtonActive: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#F05A28',
   },
   tabButtonText: {
-    color: '#007AFF',
+    color: '#F05A28',
     fontSize: 14,
     fontWeight: 'bold',
   },

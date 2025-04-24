@@ -1,14 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
-import testJobData from '../assets/testJobData';
-import { postABid } from '../utils/api';
+import { getJobByID, postABid } from '../utils/api';
+import { useContext } from 'react';
+import { UserContext } from './UserContext';
+
 export default function ProviderJobDetailPage({ route }) {
   const { jobId } = route.params;
-  const job = testJobData.find((item) => item.job_id === jobId);
+  const { userData } = useContext(UserContext);
 
+  const [job, setJob] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [bidAmount, setBidAmount] = useState('0'); 
+  const [bidAmount, setBidAmount] = useState('0');
   const [submittedBid, setSubmittedBid] = useState(null);
+
+  // Fetch job by jobId
+  useEffect(() => {
+    const fetchJob = async () => {
+      try {
+        setLoading(true);
+        const jobData = await getJobByID(jobId);
+        console.log('Fetched job:', jobData); 
+        setJob(jobData);
+      } catch (error) {
+        console.error('Error fetching job:', error);
+        Alert.alert('Error', 'Failed to load job details.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJob();
+  }, [jobId]);
 
   const handleSubmitBid = () => {
     if (!bidAmount || isNaN(bidAmount) || Number(bidAmount) <= 0) {
@@ -16,21 +39,25 @@ export default function ProviderJobDetailPage({ route }) {
       return;
     }
 
-    const bid = {
-      job_id: jobId,
-      amount: Number(bidAmount),
-      provider: 'Current Provider', 
-    }; 
-
-    //  API call to submit the bid
-    postABid(jobId, Number(bidAmount), 43)
-    .then(data =>  Alert.alert('Bid succesfully submitted'))
-    .catch(error =>  Alert.alert('Error', 'Please enter a valid bid amount.'))
-    console.log('Submitting bid:', bid);
-    setSubmittedBid(bid.amount);
-    setShowModal(false);
-    Alert.alert('Success', `Bid of $${bidAmount} submitted successfully!`);
+    postABid(jobId, Number(bidAmount), userData.user_id)
+      .then(data => {
+        setSubmittedBid(Number(bidAmount));
+        setShowModal(false);
+        Alert.alert('Success', `Bid of $${bidAmount} submitted successfully!`);
+      })
+      .catch(error => {
+        console.error('Error submitting bid:', error);
+        Alert.alert('Error', 'Failed to submit bid.');
+      });
   };
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading job...</Text>
+      </View>
+    );
+  }
 
   if (!job) {
     return (
@@ -48,7 +75,6 @@ export default function ProviderJobDetailPage({ route }) {
       {/* Job Details */}
       <View style={styles.detailsContainer}>
         <Text style={styles.jobTitle}>{job.summary}</Text>
-        <Text style={styles.jobLocation}>{job.location}</Text>
         <Text style={styles.jobDistance}>5 miles away</Text>
         <View style={styles.dateContainer}>
           <Text style={styles.jobDate}>Posted: 12/4/25</Text>
@@ -164,7 +190,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   bidButton: {
-    backgroundColor: '#66D575',
+    backgroundColor: '#F05A28', 
     borderRadius: 6,
     paddingVertical: 12,
     alignItems: 'center',
@@ -204,7 +230,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   submitButton: {
-    backgroundColor: '#66D575',
+    backgroundColor: '#F05A28', 
     borderRadius: 6,
     paddingVertical: 12,
     width: '100%',
