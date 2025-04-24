@@ -36,7 +36,7 @@ export default function JobItem({
             />
             <View style={styles.middleContent}>
               <Text style={styles.jobTitle}>{summary}</Text>
-              <Text style={styles.postedDate}>{target_date}</Text>
+              <Text style={styles.postedDate}>Posted Date: {target_date}</Text>
             </View>
             {/* <View style={styles.rightContent}>
               <Text style={styles.distanceLabel}>Location</Text>
