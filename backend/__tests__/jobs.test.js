@@ -500,22 +500,59 @@ describe("PATCH: /jobs/:job_id/complete", () => {
 })
 
 describe("PATCH: /jobs/:job_id/accept/:bid_id", () => {
-  test("200: Respond with array containing the accepted bid object", () => {
+  test("200: Responds with array of updated bids and updates jobs table", () => {
       return supertest(app)
-      .patch("/jobs/4/accept/7")
-      .expect(200)
-      .then(response => {
-          const { body } = response;
-          expect(body.length).toBe(2)
-          const acceptedBid = body[0]
-          expect(acceptedBid.bid_id).toBe(7)
-          expect(acceptedBid.job_id).toBe(4)
-          expect(acceptedBid).toHaveProperty("amount")
-          expect(acceptedBid).toHaveProperty("provider_id")
-          expect(acceptedBid.status).toBe("accepted")
-          expect(acceptedBid).toHaveProperty("created_at")
-      })
-  })
+          .patch("/jobs/4/accept/7")
+          .expect(200)
+          .then(response => {
+              const { body: bids } = response;
+
+              // Verify bids array
+              expect(bids).toBeInstanceOf(Array);
+              expect(bids.length).toBe(2); // Job 4 has 2 bids in seed data
+
+              // Verify accepted bid
+              const acceptedBid = bids.find(bid => bid.bid_id === 7);
+              expect(acceptedBid).toBeDefined();
+              expect(acceptedBid.job_id).toBe(4);
+              expect(acceptedBid.status).toBe("accepted");
+              expect(acceptedBid).toHaveProperty("amount");
+              expect(acceptedBid).toHaveProperty("provider_id");
+              expect(acceptedBid).toHaveProperty("created_at");
+
+              // Verify rejected bid
+              const rejectedBid = bids.find(bid => bid.bid_id !== 7);
+              expect(rejectedBid).toBeDefined();
+              expect(rejectedBid.job_id).toBe(4);
+              expect(rejectedBid.status).toBe("rejected");
+
+              // Verify jobs table update
+              return db.query("SELECT * FROM jobs WHERE job_id = $1", [4])
+                  .then(jobQuery => {
+                      const job = jobQuery.rows[0];
+                      expect(job).toBeDefined();
+                      expect(job.status).toBe("accepted");
+                      expect(job.accepted_bid).toBe(7);
+                  });
+          });
+  });
+// describe("PATCH: /jobs/:job_id/accept/:bid_id", () => {
+//   test("200: Respond with array containing the accepted bid object", () => {
+//       return supertest(app)
+//       .patch("/jobs/4/accept/7")
+//       .expect(200)
+//       .then(response => {
+//           const { body } = response;
+//           expect(body.length).toBe(2)
+//           const acceptedBid = body[0]
+//           expect(acceptedBid.bid_id).toBe(7)
+//           expect(acceptedBid.job_id).toBe(4)
+//           expect(acceptedBid).toHaveProperty("amount")
+//           expect(acceptedBid).toHaveProperty("provider_id")
+//           expect(acceptedBid.status).toBe("accepted")
+//           expect(acceptedBid).toHaveProperty("created_at")
+//       })
+//   })
   test("200: Respond with array containing the the other rejected bid objects", () => {
       return supertest(app)
       .patch("/jobs/4/accept/7")

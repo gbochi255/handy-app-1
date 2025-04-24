@@ -227,37 +227,101 @@ exports.fetchClientJobs = (client_id, status) => {
 }
 
 
+// exports.updateBidAccept = (job_id, bid_id) => {
+
+//     let queryStr = `
+//     UPDATE bids
+//     SET status = CASE
+//         WHEN bid_id = $2 AND job_id = $1 THEN 'accepted'::bid_status
+//         WHEN bid_id != $2 AND job_id = $1 THEN 'rejected'::bid_status
+//     END
+//     WHERE job_id = $1
+//     RETURNING *;
+//   `;
+
+//     return db.query(queryStr, [job_id, bid_id])
+//         .then(({ rows }) => {
+//             if (rows.length === 0) {
+//                 return Promise.reject({
+//                     status: 404,
+//                     message: 'Job Not found',
+//                 })
+//             }
+//             const bidExists = rows.some(row => row.bid_id === bid_id)
+//             if (!bidExists) {
+//                 return Promise.reject({
+//                     status: 404,
+//                     message: 'Bid Not found',
+//                 })
+//             }
+//             return rows;
+//         })
+// }
+
+
 exports.updateBidAccept = (job_id, bid_id) => {
+  return db.query('BEGIN')
+      .then(() => {
+          // Update bids table
+          const updateBidsQuery = `
+              UPDATE bids
+              SET status = CASE
+                  WHEN bid_id = $2 AND job_id = $1 THEN 'accepted'::bid_status
+                  WHEN bid_id != $2 AND job_id = $1 THEN 'rejected'::bid_status
+              END
+              WHERE job_id = $1
+              RETURNING *;
+          `;
+          return db.query(updateBidsQuery, [job_id, bid_id]);
+      })
+      .then(({ rows }) => {
+          if (rows.length === 0) {
+              return db.query('ROLLBACK')
+                  .then(() => Promise.reject({
+                      status: 404,
+                      message: 'Job Not found',
+                  }));
+          }
 
-    let queryStr = `
-    UPDATE bids
-    SET status = CASE
-        WHEN bid_id = $2 AND job_id = $1 THEN 'accepted'::bid_status
-        WHEN bid_id != $2 AND job_id = $1 THEN 'rejected'::bid_status
-    END
-    WHERE job_id = $1
-    RETURNING *;
-  `;
+          const bidExists = rows.some(row => row.bid_id === bid_id);
+          if (!bidExists) {
+              return db.query('ROLLBACK')
+                  .then(() => Promise.reject({
+                      status: 404,
+                      message: 'Bid Not found',
+                  }));
+          }
 
-    return db.query(queryStr, [job_id, bid_id])
-        .then(({ rows }) => {
-            if (rows.length === 0) {
-                return Promise.reject({
-                    status: 404,
-                    message: 'Job Not found',
-                })
-            }
-            const bidExists = rows.some(row => row.bid_id === bid_id)
-            if (!bidExists) {
-                return Promise.reject({
-                    status: 404,
-                    message: 'Bid Not found',
-                })
-            }
-            return rows;
-        })
-}
+          // Update jobs table
+          const updateJobsQuery = `
+              UPDATE jobs
+              SET 
+                  status = 'accepted'::job_status,
+                  accepted_bid = $2
+              WHERE job_id = $1
+              RETURNING *;
+          `;
+          return db.query(updateJobsQuery, [job_id, bid_id])
+              .then(jobsResult => ({ bids: rows, jobs: jobsResult.rows }));
+      })
+      .then(({ bids, jobs }) => {
+          if (jobs.length === 0) {
+              return db.query('ROLLBACK')
+                  .then(() => Promise.reject({
+                      status: 404,
+                      message: 'Job Not found',
+                  }));
+          }
 
+          // Commit transaction
+          return db.query('COMMIT')
+              .then(() => bids); // Return updated bids for consistency
+      })
+      .catch(err => {
+          return db.query('ROLLBACK')
+              .then(() => { throw err; });
+      });
+};
 
 exports.fetchJobByID = (job_id) => {
 
