@@ -18,7 +18,7 @@ export default function JobItem({
 
   const handlePress = () => {
     console.log(`Navigating to ${destination} with jobId: ${job_id}`);
-    navigation.navigate("JobPage", {
+    navigation.navigate(destination, {
       job_id,
       summary,
       job_detail,

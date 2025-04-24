@@ -1,17 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
-import { getJobByID, postABid } from '../utils/api';
-import { useContext } from 'react';
-import { UserContext } from './UserContext';
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+  Alert,
+} from "react-native";
+import { getJobByID, postABid } from "../utils/api";
+import { useContext } from "react";
+import { UserContext } from "./UserContext";
 
 export default function ProviderJobDetailPage({ route }) {
-  const { jobId } = route.params;
+  const { job_id } = route.params;
   const { userData } = useContext(UserContext);
 
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [bidAmount, setBidAmount] = useState('0');
+  const [bidAmount, setBidAmount] = useState("0");
   const [submittedBid, setSubmittedBid] = useState(null);
 
   // Fetch job by jobId
@@ -19,35 +28,35 @@ export default function ProviderJobDetailPage({ route }) {
     const fetchJob = async () => {
       try {
         setLoading(true);
-        const jobData = await getJobByID(jobId);
-        console.log('Fetched job:', jobData); 
+        const jobData = await getJobByID(job_id);
+        console.log("Fetched job:", jobData);
         setJob(jobData);
       } catch (error) {
-        console.error('Error fetching job:', error);
-        Alert.alert('Error', 'Failed to load job details.');
+        console.error("Error fetching job:", error);
+        Alert.alert("Error", "Failed to load job details.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchJob();
-  }, [jobId]);
+  }, [job_id]);
 
   const handleSubmitBid = () => {
     if (!bidAmount || isNaN(bidAmount) || Number(bidAmount) <= 0) {
-      Alert.alert('Error', 'Please enter a valid bid amount.');
+      Alert.alert("Error", "Please enter a valid bid amount.");
       return;
     }
 
-    postABid(jobId, Number(bidAmount), userData.user_id)
-      .then(data => {
+    postABid(job_id, Number(bidAmount), userData.user_id)
+      .then((data) => {
         setSubmittedBid(Number(bidAmount));
         setShowModal(false);
-        Alert.alert('Success', `Bid of $${bidAmount} submitted successfully!`);
+        Alert.alert("Success", `Bid of $${bidAmount} submitted successfully!`);
       })
-      .catch(error => {
-        console.error('Error submitting bid:', error);
-        Alert.alert('Error', 'Failed to submit bid.');
+      .catch((error) => {
+        console.error("Error submitting bid:", error);
+        Alert.alert("Error", "Failed to submit bid.");
       });
   };
 
@@ -138,10 +147,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
   },
   jobImage: {
-    width: '100%',
+    width: "100%",
     height: 200,
     borderRadius: 8,
     marginBottom: 16,
@@ -151,31 +160,31 @@ const styles = StyleSheet.create({
   },
   jobTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   jobLocation: {
     fontSize: 16,
-    color: '#666',
+    color: "#666",
     marginBottom: 4,
   },
   jobDistance: {
     fontSize: 16,
-    color: '#666',
+    color: "#666",
     marginBottom: 8,
   },
   dateContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 16,
   },
   jobDate: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   jobDescription: {
@@ -187,71 +196,71 @@ const styles = StyleSheet.create({
   },
   bidTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   bidButton: {
-    backgroundColor: '#F05A28', 
+    backgroundColor: "#F05A28",
     borderRadius: 6,
     paddingVertical: 12,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 16,
   },
   bidButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   modalOverlay: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContainer: {
-    width: '80%',
-    backgroundColor: 'white',
+    width: "80%",
+    backgroundColor: "white",
     borderRadius: 8,
     padding: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   modalTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 16,
   },
   bidInput: {
     borderWidth: 1,
-    borderColor: '#DDD',
+    borderColor: "#DDD",
     borderRadius: 6,
     padding: 10,
-    width: '100%',
+    width: "100%",
     marginBottom: 16,
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   submitButton: {
-    backgroundColor: '#F05A28', 
+    backgroundColor: "#F05A28",
     borderRadius: 6,
     paddingVertical: 12,
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
     marginBottom: 8,
   },
   submitButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   cancelButton: {
     borderWidth: 1,
-    borderColor: '#DDD',
+    borderColor: "#DDD",
     borderRadius: 6,
     paddingVertical: 12,
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
   },
   cancelButtonText: {
-    color: '#666',
+    color: "#666",
     fontSize: 16,
   },
 });

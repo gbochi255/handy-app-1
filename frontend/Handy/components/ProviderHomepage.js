@@ -75,15 +75,7 @@ export default function ProviderHomepage() {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.providerButton}>
-          <TouchableOpacity
-            style={styles.providerButtonTouchable}
-            onPress={() => {}}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.providerButtonText}>Handy Admin</Text>
-          </TouchableOpacity>
-        </View>
+        <View style={styles.providerButton}></View>
       </View>
 
       {/* Tab Buttons (My Jobs, My Bids, Available) */}
@@ -186,10 +178,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   navbarButtonContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
+    alignItems: "center",
     marginVertical: 8,
-    marginHorizontal: 60,
+    marginBottom: 50,
   },
   customerButton: {
     flex: 1,
@@ -198,14 +189,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   customerButtonTouchable: {
-    backgroundColor: "#999999",
+    backgroundColor: "grey",
     borderWidth: 2,
-    borderColor: "#F05A28",
+    borderColor: "grey",
     paddingVertical: 10,
-    borderTopLeftRadius: 4,
-    borderBottomLeftRadius: 4,
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
+    paddingHorizontal: 20,
+    borderRadius: 6,
     alignItems: "center",
     justifyContent: "center",
     height: 40,
@@ -216,7 +205,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   providerButtonTouchable: {
-    backgroundColor: "#F05A28",
+    backgroundColor: "#FF7A00",
     paddingVertical: 10,
     borderTopRightRadius: 4,
     borderBottomRightRadius: 4,
@@ -238,7 +227,7 @@ const styles = StyleSheet.create({
   },
   tabButton: {
     borderWidth: 2,
-    borderColor: "#F05A28",
+    borderColor: "#FF7A00",
     borderRadius: 20,
     paddingVertical: 8,
     paddingHorizontal: 16,
@@ -246,10 +235,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   tabButtonActive: {
-    backgroundColor: "#F05A28",
+    backgroundColor: "#FF7A00",
   },
   tabButtonText: {
-    color: "#F05A28",
+    color: "#FF7A00",
     fontSize: 14,
     fontWeight: "bold",
   },
