@@ -38,19 +38,23 @@ export default function SignUp() {
 =======
   const { userData, setUserData } = useContext(UserContext);
 
-
-
   function handleSubmit() {
-    const { firstName, lastName, email, password, postcode, county, city, bio } =
-      userData;
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      postcode,
+      county,
+      city,
+      bio,
+    } = userData;
     if (
       !firstName ||
       !lastName ||
       !email ||
       !password ||
       !postcode ||
-      !county ||
-      !city ||
       !bio ||
       !photoUrl
     ) {
@@ -58,24 +62,22 @@ export default function SignUp() {
       return;
     }
 
-     registerUser( 
-        userData.firstName,
-        userData.lastName,
-        userData.email,
-        userData.password,
-        userData.postcode,
-        userData.county,
-        userData.city,
-        photoUrl,
-        userData.bio,
-        userData.long,
-        userData.lat,
-        userData.isProvider,
-      )
+    registerUser(
+      userData.firstName,
+      userData.lastName,
+      userData.email,
+      userData.password,
+      userData.postcode,
+      userData.county,
+      userData.city,
+      photoUrl,
+      userData.bio,
+      userData.long,
+      userData.lat,
+      userData.isProvider
+    )
       .then(() => {
-
-
-      //reset the userData
+        //reset the userData
         setUserData({
           firstName: "",
           lastName: "",
@@ -111,7 +113,7 @@ export default function SignUp() {
 
         setUserData({
           ...userData,
-          city: data.features[0].properties.city, 
+          city: data.features[0].properties.city,
           county: data.features[0].properties.county,
           long: data.features[0].properties.lon,
           lat: data.features[0].properties.lat,

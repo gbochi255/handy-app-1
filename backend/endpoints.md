@@ -296,7 +296,7 @@ GET /jobs/1
 
 **Query Parameters:**
 - `distance` (optional): Maximum distance in miles (default: 10)
-- `status` (optional): Filter jobs by status (open, in_progress, closed, expired)
+- `status` (optional): Filter jobs by status (open, accepted, completed, expired)
 
 **Example Request:**
 ```
@@ -465,11 +465,10 @@ GET /jobs/provider/2/won
 {
   "summary": "Fix leaking faucet",
   "job_detail": "The kitchen faucet is leaking and needs to be fixed or replaced",
-  "category": "plumbing",
-  "created_by": 1,
+  "created_by": 1,          // (user_id of creator)
   "photo_url": "https://example.com/faucet.jpg",
   "target_date": "2025-04-25T10:00:00.000Z",
-  "postcode": "M1 1AA"
+  "category": "plumbing",   // (optional)
 }
 ```
 
