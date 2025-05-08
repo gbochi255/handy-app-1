@@ -1,15 +1,25 @@
-import React, { useState, useContext, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform, Alert, Modal, Image } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { UserContext } from './UserContext'; 
-import axios from 'axios';
-import { CameraView, useCameraPermissions } from 'expo-camera';
-import { supabase } from '../lib/supabase';
+import React, { useState, useContext, useRef } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+  Alert,
+  Modal,
+  Image,
+} from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { UserContext } from "./UserContext";
+import axios from "axios";
+import { CameraView, useCameraPermissions } from "expo-camera";
+import { supabase } from "../lib/supabase";
 
 export default function PostJob() {
-  const { userData } = useContext(UserContext); 
-  const [summary, setSummary] = useState('');
-  const [jobDetail, setJobDetail] = useState('');
+  const { userData } = useContext(UserContext);
+  const [summary, setSummary] = useState("");
+  const [jobDetail, setJobDetail] = useState("");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [photoUri, setPhotoUri] = useState(null);
@@ -20,13 +30,13 @@ export default function PostJob() {
   const cameraRef = useRef(null);
 
   const openDatePicker = () => {
-    console.log('Opening date picker');
+    console.log("Opening date picker");
     setShowDatePicker(true);
   };
 
   const onDateChange = (event, selectedDate) => {
-    console.log('Date picker event:', event.type);
-    if (event.type === 'dismissed') {
+    console.log("Date picker event:", event.type);
+    if (event.type === "dismissed") {
       setShowDatePicker(false);
       return;
     }
@@ -81,32 +91,39 @@ export default function PostJob() {
   };
 
   const handleSubmit = async () => {
-    const userId = userData?.email;
     const jobData = {
-      userId,
+      created_by: userData.user_id,
       summary,
-      jobDetail,
-      date: date.toISOString(),
-      photoUrl,
+      job_detail: jobDetail,
+      target_date: date.toISOString(),
+      photo_url: photoUrl,
+      category: "gardening",
+      postcode: userData.postcode,
     };
 
     try {
-      const response = await axios.post('https://api-url/jobs', jobData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await axios.post(
+        "https://handy-rpx6.onrender.com/jobs/create",
+        jobData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      Alert.alert('Success', 'Job posted successfully!');
-      console.log('API response:', response.data);
-      setSummary('');
-      setJobDetail('');
+      Alert.alert("Success", "Job posted successfully!");
+      console.log(jobData, "jobData <<<<");
+      console.log("API response:", response.data);
+      setSummary("");
+      setJobDetail("");
       setDate(new Date());
       setPhotoUri(null);
       setPhotoUrl(null);
     } catch (error) {
-      Alert.alert('Error', 'Failed to post job. Please try again.');
-      console.error('Error posting job:', error);
+      console.log(jobData, "jobData <<<<");
+      Alert.alert("Error", "Failed to post job. Please try again.");
+      console.error("Error posting job:", error);
     }
   };
 
@@ -161,7 +178,7 @@ export default function PostJob() {
             <DateTimePicker
               value={date}
               mode="date"
-              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+              display={Platform.OS === "ios" ? "spinner" : "default"}
               onChange={onDateChange}
             />
           )}
@@ -169,7 +186,7 @@ export default function PostJob() {
       </View>
 
       <View style={styles.imageUploadContainer}>
-        {(photoUri || photoUrl) ? (
+        {photoUri || photoUrl ? (
           <Image
             source={{ uri: photoUri || photoUrl }}
             style={styles.imagePreview}
@@ -180,7 +197,10 @@ export default function PostJob() {
           </View>
         )}
         <TouchableOpacity
-          style={[styles.uploadButton, isUploading && styles.uploadButtonDisabled]}
+          style={[
+            styles.uploadButton,
+            isUploading && styles.uploadButtonDisabled,
+          ]}
           onPress={() => setShowCamera(true)}
           disabled={isUploading}
         >
@@ -190,10 +210,7 @@ export default function PostJob() {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity
-        style={styles.orangeButton}
-        onPress={handleSubmit}
-      >
+      <TouchableOpacity style={styles.orangeButton} onPress={handleSubmit}>
         <Text style={styles.orangeButtonText}>Submit</Text>
       </TouchableOpacity>
 
@@ -226,29 +243,29 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: "#000",
     borderRadius: 5,
     padding: 10,
     marginBottom: 15,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
   },
   textArea: {
     height: 100,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
   row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 15,
   },
   dateContainer: {
@@ -260,26 +277,26 @@ const styles = StyleSheet.create({
   },
   dateTouchable: {
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: "#000",
     borderRadius: 5,
     padding: 10,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
   },
   dateText: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 16,
   },
   imageUploadContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 20,
   },
   imagePlaceholder: {
     width: 50,
     height: 50,
-    backgroundColor: '#666',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#666",
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 10,
     borderRadius: 5,
   },
@@ -290,27 +307,27 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   imageText: {
-    color: '#FFF',
-    fontWeight: 'bold',
+    color: "#FFF",
+    fontWeight: "bold",
   },
   uploadButton: {
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: "#000",
     borderRadius: 5,
     padding: 10,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     flex: 1,
   },
   uploadButtonDisabled: {
-    backgroundColor: '#CCC',
+    backgroundColor: "#CCC",
   },
   uploadButtonText: {
-    textAlign: 'center',
+    textAlign: "center",
   },
   permissionContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
   permissionText: {
@@ -318,37 +335,37 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   permissionButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: "#007AFF",
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,
   },
   permissionButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
   },
   cameraButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 40,
-    alignSelf: 'center',
-    backgroundColor: 'gray',
+    alignSelf: "center",
+    backgroundColor: "gray",
     padding: 20,
     borderRadius: 10,
   },
   cameraButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 18,
   },
   closeButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 40,
     right: 20,
-    backgroundColor: 'gray',
+    backgroundColor: "gray",
     padding: 10,
     borderRadius: 5,
   },
   closeButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
   },
   orangeButton: {
@@ -361,8 +378,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   orangeButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });

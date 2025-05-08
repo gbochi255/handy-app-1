@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,102 +7,251 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import testJobData from "../assets/testJobData";
+import { SafeAreaView } from "react-native-safe-area-context";
 import JobItem from "./JobItem";
 import Header from "./Header";
+import { useContext } from "react";
+import { UserContext } from "./UserContext";
+
+import {
+  getProviderWonJobs,
+  getProviderBids,
+  getProviderJobs,
+} from "../utils/api";
 
 export default function ProviderHomepage() {
+  const navigation = useNavigation();
+  const { userData, setUserData } = useContext(UserContext);
+
+  const [activeTab, setActiveTab] = useState("Available");
+  const [myJobs, setMyJobs] = useState([]);
+  const [myBids, setMyBids] = useState([]);
+  const [availableJobs, setAvailableJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+
+        const myJobsResponse = await getProviderWonJobs(userData.user_id);
+        setMyJobs(myJobsResponse.jobs || []);
+
+        const myBidsResponse = await getProviderBids(userData.user_id);
+        setMyBids(myBidsResponse.jobs || []);
+
+        const availableJobsResponse = await getProviderJobs(userData.user_id);
+        setAvailableJobs(availableJobsResponse.jobs || []);
+      } catch (error) {
+        console.error("Error fetching jobs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [activeTab]);
+
+  const displayedJobs =
+    activeTab === "My Jobs"
+      ? myJobs
+      : activeTab === "My Bids"
+      ? myBids
+      : availableJobs;
+
   return (
-    <View style={styles.appContainer}>
+    <SafeAreaView style={styles.safeArea}>
       <Header />
 
-      <View style={styles.contentContainer}>
-        <FlatList
-          data={testJobData}
-          renderItem={({ item }) => (
-            <JobItem
-              job_id={item.job_id}
-              summary={item.summary}
-              job_detail={item.job_detail}
-              created_by={item.created_by}
-              status={item.status}
-              photo_url={item.photo_url}
-              target_date={item.target_date}
-              location={item.location}
-            />
-          )}
-          keyExtractor={(item) => item.job_id}
-        />
+      {/* Navbar section */}
+      <View style={styles.navbarButtonContainer}>
+        <View style={styles.customerButton}>
+          <TouchableOpacity
+            style={styles.customerButtonTouchable}
+            onPress={() => navigation.navigate("CustomerHomepage")}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.customerButtonText}>Customer</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.providerButton}></View>
       </View>
-    </View>
+
+      {/* Tab Buttons (My Jobs, My Bids, Available) */}
+      <View style={styles.tabContainer}>
+        <TouchableOpacity
+          style={[
+            styles.tabButton,
+            activeTab === "My Jobs" && styles.tabButtonActive,
+          ]}
+          onPress={() => setActiveTab("My Jobs")}
+        >
+          <Text
+            style={[
+              styles.tabButtonText,
+              activeTab === "My Jobs" && styles.tabButtonTextActive,
+            ]}
+          >
+            My Jobs
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.tabButton,
+            activeTab === "My Bids" && styles.tabButtonActive,
+          ]}
+          onPress={() => setActiveTab("My Bids")}
+        >
+          <Text
+            style={[
+              styles.tabButtonText,
+              activeTab === "My Bids" && styles.tabButtonTextActive,
+            ]}
+          >
+            My Bids
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.tabButton,
+            activeTab === "Available" && styles.tabButtonActive,
+          ]}
+          onPress={() => setActiveTab("Available")}
+        >
+          <Text
+            style={[
+              styles.tabButtonText,
+              activeTab === "Available" && styles.tabButtonTextActive,
+            ]}
+          >
+            Available
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Main section */}
+      <View style={styles.contentContainer}>
+        {loading ? (
+          <Text>Loading jobs...</Text>
+        ) : (
+          <>
+            <Text style={styles.sectionTitle}>
+              {activeTab === "My Jobs"
+                ? "My Jobs"
+                : activeTab === "My Bids"
+                ? "My Bids"
+                : "Available Jobs"}
+            </Text>
+            <FlatList
+              data={displayedJobs}
+              renderItem={({ item }) => (
+                <JobItem
+                  job_id={item.job_id}
+                  summary={item.summary}
+                  job_detail={item.job_detail}
+                  created_by={item.created_by}
+                  status={item.status}
+                  photo_url={item.photo_url}
+                  target_date={item.target_date}
+                  location={item.location}
+                  destination="ProviderJobDetailsPage"
+                />
+              )}
+              keyExtractor={(item, index) =>
+                `${activeTab}-${item.job_id}-${index}`
+              }
+              showsVerticalScrollIndicator={false}
+              ListEmptyComponent={() => <Text>No jobs to display.</Text>}
+            />
+          </>
+        )}
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  appContainer: {
+  safeArea: {
     flex: 1,
-    paddingTop: 20,
+    backgroundColor: "#f0f0f0",
     paddingHorizontal: 16,
-    alignContent: "center",
   },
-
   navbarButtonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    margin: 20,
-    marginBottom: 40,
-    marginLeft: 60,
-    marginRight: 60,
-    borderColor: "rgb(0, 0, 0)",
-    borderWidth: 2,
+    alignItems: "center",
+    marginVertical: 8,
+    marginBottom: 50,
   },
   customerButton: {
     flex: 1,
-    borderColor: "rgb(0, 0, 0)",
-    borderWidth: 2,
   },
   providerButton: {
     flex: 1,
-    borderColor: "rgb(0, 0, 0)",
+  },
+  customerButtonTouchable: {
+    backgroundColor: "grey",
     borderWidth: 2,
-    backgroundColor: "#3DADFF",
-  },
-  myJobsTitle: {
-    font: 60,
-  },
-  addJobButton: {
-    borderColor: "rgb(0, 0, 0)",
-    borderWidth: 2,
-    backgroundColor: "#66D575",
-  },
-  container: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginVertical: 20,
-  },
-  radioContainer: {
-    flexDirection: "row",
+    borderColor: "grey",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 6,
     alignItems: "center",
-    marginHorizontal: 10,
+    justifyContent: "center",
+    height: 40,
   },
-  outerCircle: {
-    height: 24,
-    width: 24,
-    borderRadius: 12,
+  customerButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  providerButtonTouchable: {
+    backgroundColor: "#FF7A00",
+    paddingVertical: 10,
+    borderTopRightRadius: 4,
+    borderBottomRightRadius: 4,
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    height: 40,
+  },
+  providerButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  tabContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginVertical: 10,
+  },
+  tabButton: {
     borderWidth: 2,
     borderColor: "#FF7A00",
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 8,
   },
-  innerCircle: {
-    height: 12,
-    width: 12,
-    borderRadius: 6,
+  tabButtonActive: {
     backgroundColor: "#FF7A00",
   },
-  label: {
-    fontSize: 16,
-    textTransform: "capitalize",
+  tabButtonText: {
+    color: "#FF7A00",
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+  tabButtonTextActive: {
+    color: "#fff",
+  },
+  contentContainer: {
+    flex: 1,
+    paddingTop: 10,
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
 });

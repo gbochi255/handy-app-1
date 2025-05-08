@@ -7,6 +7,8 @@ import CustomerHomepage from "./components/CustomerHomepage.js";
 import CameraApp from "./components/CameraApp.js";
 import { UserProvider } from "./components/UserContext";
 import ProviderHomepage from "./components/ProviderHomepage.js";
+import ProviderJobDetailsPage from "./components/ProviderJobDetailsPage.js";
+
 import JobItem from "./components/JobItem.js";
 import JobPage from "./components/JobPage.js";
 import BidItem from "./components/BidItem.js";
@@ -32,6 +34,7 @@ export default function App() {
           <Stack.Screen name="CameraApp" component={CameraApp} />
           <Stack.Screen name="CustomerHomepage" component={CustomerHomepage} />
           <Stack.Screen name="ProviderHomepage" component={ProviderHomepage} />
+          <Stack.Screen name="ProviderJobDetailsPage" component={ProviderJobDetailsPage} />
           <Stack.Screen name="JobItem" component={JobItem} />
           <Stack.Screen name="JobPage" component={JobPage} />
           <Stack.Screen name="BidItem" component={BidItem} />

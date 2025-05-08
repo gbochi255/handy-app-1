@@ -1,34 +1,65 @@
-import { StyleSheet, Text, View, TouchableHighlight } from "react-native";
+import React from "react";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Card } from "react-native-paper";
+import { acceptBid } from "../utils/api";
+import { useState } from "react";
 
 export default function BidItem({
   job_id,
+  bid_id,
   amount,
-  provider_id,
   status,
   created_at,
+  avatar_url,
+  provider_id,
+  provider_firstname,
+  provider_lastname,
 }) {
   const navigation = useNavigation();
 
+  const [bidStatus, setBidStatus] = useState(status);
+
+  function handleAcceptPress() {
+    acceptBid(job_id, bid_id)
+      .then(() => {
+        setBidStatus("accepted");
+      })
+      .catch((err) => {
+        console.error("Bid Failed");
+      });
+  }
+
   return (
-    <Card style={styles.card} onPress={() => navigation.navigate("BidPage")}>
+    <Card
+      style={[styles.card, bidStatus === "accepted" && styles.acceptedCard]}
+    >
       <Card.Content>
         <View style={styles.row}>
-          <View style={styles.leftContent}>
-            <Text style={styles.amountLabel}>Amount</Text>
-            <Text style={styles.amountValue}>{amount}</Text>
-          </View>
-
+          <Image
+            source={{
+              uri: avatar_url || "https://picsum.photos/seed/avatar/100/100",
+            }}
+            style={styles.avatar}
+          />
           <View style={styles.middleContent}>
             <Text style={styles.detailText}>Provider ID: {provider_id}</Text>
+            <Text style={styles.detailText}>
+              {provider_firstname} {provider_lastname}
+            </Text>
+            <Text style={styles.detailText}>
+              Bid Placed: {new Date(created_at).toLocaleDateString()}
+            </Text>
             <Text style={styles.detailText}>Status: {status || "pending"}</Text>
+            <Text style={styles.amountValue}>£{amount}</Text>
           </View>
 
-          <View style={styles.rightContent}>
-            <Text style={styles.dateLabel}>Bid Date</Text>
-            <Text style={styles.dateValue}>{created_at}</Text>
-          </View>
+          <TouchableOpacity
+            style={styles.acceptButton}
+            onPress={handleAcceptPress}
+          >
+            <Text style={styles.buttonText}>Accept</Text>
+          </TouchableOpacity>
         </View>
       </Card.Content>
     </Card>
@@ -44,19 +75,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  leftContent: {
-    width: 80,
-    justifyContent: "center",
-    alignItems: "flex-start",
+  avatar: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     marginRight: 10,
-  },
-  amountLabel: {
-    fontSize: 12,
-    color: "gray",
-  },
-  amountValue: {
-    fontSize: 16,
-    fontWeight: "bold",
   },
   middleContent: {
     flex: 1,
@@ -66,16 +89,24 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#333",
   },
-  rightContent: {
-    alignItems: "flex-end",
-    justifyContent: "center",
-  },
-  dateLabel: {
-    fontSize: 12,
-    color: "gray",
-  },
-  dateValue: {
-    fontSize: 14,
+  amountValue: {
+    fontSize: 16,
     fontWeight: "bold",
+    marginTop: 4,
+  },
+  acceptButton: {
+    backgroundColor: "#34C759",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 14,
+  },
+  acceptedCard: {
+    borderWidth: 4,
+    borderColor: "#34C759",
   },
 });

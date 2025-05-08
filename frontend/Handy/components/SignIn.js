@@ -11,11 +11,11 @@ import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
 import { useEffect } from "react";
-
+import { loginUser } from "../utils/api";
 export default function SignIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { setUserData } = useContext(UserContext);
+  const { setUserData, userData } = useContext(UserContext);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -36,38 +36,20 @@ export default function SignIn() {
   }, []);
 
   function verifyUser() {
-    setUserData({
-      firstName: "John",
-      lastName: "Smith",
-      email: "john@smith.com",
-      password: "banana",
-      postcode: "E14 0GX",
-      region: "London",
-      long: "-0.007487",
-      lat: "51.516586",
-      bio: "Great with a hammer",
-      photoUrl: "./assets/defaultProfile.png",
-      isProvider: true,
-      token: true,
-    });
+    
 
-    navigation.navigate("CustomerHomepage");
-
-    // axios
-    //   .post("url/login", {
-    //     username,
-    //     password,
-    //   })
-    //   .then((res) => {
-    //     setUserData({
-    //       ...userData,
-    //       token: res.data.user.token,
-    //     });
-    //     navigation.navigate("CustomerHomepage");
-    //   })
-    //   .catch((err) => {
-    //     Alert.alert("Login failed");
-    //   });
+    loginUser(username,password)
+      .then((res) => { 
+        // console.log(res);
+        
+        setUserData(res);
+        if(res.is_provider){navigation.navigate("ProviderHomepage")} else {navigation.navigate("CustomerHomepage")}
+ 
+        
+      })
+      .catch((err) => {
+        Alert.alert("Login failed");
+      });
   }
 
   return (

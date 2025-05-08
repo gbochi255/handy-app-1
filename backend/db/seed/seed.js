@@ -2,11 +2,25 @@ const db = require("../connection")
 
 const seed = () => {
     return db.query(`
-                CREATE EXTENSION postgis;
-                -- Create ENUM types for status (optional)
+                CREATE EXTENSION IF NOT EXISTS postgis;
+        `)
+        .then(() => {
+            return db.query("DROP TABLE IF EXISTS bids CASCADE;")
+        })
+        .then(() => {
+            return db.query("DROP TABLE IF EXISTS jobs CASCADE;")
+        })
+        .then(() => {
+            return db.query("DROP TABLE IF EXISTS users CASCADE;")
+        })
+        .then(() => {
+            return db.query(`
+                DROP TYPE IF EXISTS job_status CASCADE;
+                DROP TYPE IF EXISTS bid_status CASCADE;
                 CREATE TYPE job_status AS ENUM ('open', 'accepted', 'completed', 'expired');
                 CREATE TYPE bid_status AS ENUM ('pending', 'accepted', 'rejected');
-        `)
+            `)
+        })
         .then(() => {
             return db.query("DROP TABLE IF EXISTS bids;")
         })
@@ -53,6 +67,9 @@ const seed = () => {
         .then(() => {
             return populateBids()
         })
+        .then(()=> {
+            return resetCounters()
+        })
 }
 
 function createUsers() {
@@ -83,7 +100,7 @@ function createJobs() {
         summary VARCHAR(255) NOT NULL,
         job_detail TEXT,
         category VARCHAR(50),
-        created_by INTEGER NOT NULL REFERENCES users(user_id),
+        created_by INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
         status job_status DEFAULT 'open',
         accepted_bid INTEGER,
         date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -99,9 +116,9 @@ function createBids() {
     return db.query(`
         CREATE TABLE bids (
     bid_id SERIAL PRIMARY KEY,
-    job_id INTEGER NOT NULL REFERENCES jobs(job_id),
+    job_id INTEGER NOT NULL REFERENCES jobs(job_id) ON DELETE CASCADE,
     amount DECIMAL(10, 2) NOT NULL,
-    provider_id INTEGER NOT NULL REFERENCES users(user_id),
+    provider_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     status bid_status DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -260,6 +277,14 @@ VALUES
 (41, 20, 100.00, 43, 'accepted', '2025-04-04T10:00:00Z'), -- Sam on Rewire bedroom lights (completed)
 (42, 20, 110.00, 49, 'rejected', '2025-04-04T11:00:00Z'); -- Yara on Rewire bedroom lights
     `)}
+
+function resetCounters () {
+    // Resets sequences to the next available ID
+    return db.query(`
+SELECT setval('users_user_id_seq', (SELECT MAX(user_id) FROM users));
+SELECT setval('jobs_job_id_seq', (SELECT MAX(job_id) FROM jobs));
+SELECT setval('bids_bid_id_seq', (SELECT MAX(bid_id) FROM bids));`)
+}
 
 
 function runSeed () {
