@@ -1,21 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
   Text,
   View,
   TextInput,
+  Button,
   TouchableOpacity,
   Image,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { useContext } from "react";
 import { UserContext } from "./UserContext";
-import { useEffect } from "react";
 import { loginUser } from "../utils/api";
+
 export default function SignIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { setUserData, userData } = useContext(UserContext);
+  const { setUserData } = useContext(UserContext);
   const navigation = useNavigation();
 
   useEffect(() => {
